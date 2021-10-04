@@ -29,12 +29,13 @@ class _CadUserPageState extends State<CadUserPage> {
       fontWeight: FontWeight.normal,
       fontSize: 22,
       color: Colors.white,
-  decoration: TextDecoration.underline, decorationColor: Colors.blue );
+  decoration: TextDecoration.underline, decorationColor: Colors.black38 );
 
   TextStyle _styleValor1 = TextStyle(
     fontWeight: FontWeight.normal,
     fontSize: 22,
     color: Colors.blue,
+      decoration: TextDecoration.underline, decorationColor: Colors.black38
   );
 
   DateTime currentDate = DateTime.now();
