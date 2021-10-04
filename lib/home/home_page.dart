@@ -46,7 +46,7 @@ class HomePage extends StatelessWidget {
                     margin: EdgeInsets.symmetric(vertical: 10),
                     padding: EdgeInsets.all(8),
                     child: TextButton(
-                      onPressed: () {},
+                      onPressed: () => Navigator.of(context).pushNamed('/cadUserPage'),
                       style: textButtonStyle,
                       child: (Text("Não tenho Cadastro")),
                     ),
