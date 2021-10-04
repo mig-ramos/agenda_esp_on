@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 
-
 ButtonStyle elevatedButtonStyle = ElevatedButton.styleFrom(
-    textStyle: TextStyle(fontSize: 28, color: Colors.black),
+    textStyle: const TextStyle(fontSize: 28, color: Colors.black),
     onPrimary: Colors.white,
     primary: Colors.green,
     minimumSize: Size(88, 36),
@@ -12,7 +11,7 @@ ButtonStyle elevatedButtonStyle = ElevatedButton.styleFrom(
     ));
 
 ButtonStyle textButtonStyle = TextButton.styleFrom(
-  textStyle: TextStyle(fontSize: 26, color: Colors.black),
+  textStyle: const TextStyle(fontSize: 26, color: Colors.black),
   primary: Colors.pink,
   minimumSize: Size(88, 36),
   padding: EdgeInsets.symmetric(horizontal: 6),

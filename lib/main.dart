@@ -2,13 +2,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'home/home_page.dart';
+import 'login/login_page.dart';
 
 void main() {
   runApp(AgendaEspOn());
 }
 
 class AgendaEspOn extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -20,7 +20,7 @@ class AgendaEspOn extends StatelessWidget {
       initialRoute: '/',
       routes: {
         '/': (context) => HomePage(title: 'Ephemeris'),
-        // '/loginPage': (context) => LoginPage(title: 'Fazer Login'),
+        '/loginPage': (context) => LoginPage(title: 'Fazer Login'),
         // '/menuPageUsuario': (context) => MenuPageUsuario(title: 'Ephemeris'),
         // '/menuPageMedico': (context) => MenuPageMedico(title: 'Ephemeris'),
         // '/menuPageAdmin': (context) => MenuPageAdmin(title: 'Ephemeris'),

@@ -1,4 +1,4 @@
-import 'package:agenda_esp_on/components/styles.dart';
+import 'package:agenda_esp_on/components/styles_buttons.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -10,10 +10,10 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
+      appBar: AppBar(
         title: Text(title),
-    centerTitle: true,
-    ),
+        centerTitle: true,
+      ),
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -34,11 +34,10 @@ class HomePage extends StatelessWidget {
                     margin: EdgeInsets.symmetric(vertical: 20),
                     padding: EdgeInsets.all(8),
                     child: ElevatedButton(
-                      onPressed: () {  },
+                      onPressed: () =>
+                          Navigator.of(context).pushNamed('/loginPage'),
                       style: elevatedButtonStyle,
-                      child: (
-                      Text('Entrar')
-                      ),
+                      child: (Text('Entrar')),
                     ),
                   ),
                   Container(
@@ -47,7 +46,7 @@ class HomePage extends StatelessWidget {
                     margin: EdgeInsets.symmetric(vertical: 10),
                     padding: EdgeInsets.all(8),
                     child: TextButton(
-                      onPressed: () {  },
+                      onPressed: () {},
                       style: textButtonStyle,
                       child: (Text("Não tenho Cadastro")),
                     ),
