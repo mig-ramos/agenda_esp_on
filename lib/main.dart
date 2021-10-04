@@ -5,6 +5,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'home/home_page.dart';
 import 'login/cad_user_page.dart';
 import 'login/login_page.dart';
+import 'menu_principal/menu_page_usuario.dart';
 
 void main() {
   runApp(AgendaEspOn());
@@ -33,7 +34,7 @@ class AgendaEspOn extends StatelessWidget {
         '/loginPage': (context) => LoginPage(title: 'Fazer Login'),
         '/cadUserPage': (context) =>
             CadUserPage(title: 'Cadastrar Usuário'),
-        // '/menuPageUsuario': (context) => MenuPageUsuario(title: 'Ephemeris'),
+        '/menuPageUsuario': (context) => MenuPageUsuario(title: 'Ephemeris'),
         // '/menuPageMedico': (context) => MenuPageMedico(title: 'Ephemeris'),
         // '/menuPageAdmin': (context) => MenuPageAdmin(title: 'Ephemeris'),
         // '/editaUsuarioPage': (context) =>
