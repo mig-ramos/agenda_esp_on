@@ -1,4 +1,10 @@
+import 'dart:convert';
+
+import 'package:agenda_esp_on/apis/login_api.dart';
+import 'package:agenda_esp_on/components/alert.dart';
 import 'package:agenda_esp_on/components/styles_buttons.dart';
+import 'package:agenda_esp_on/configuratios/setup.dart';
+import 'package:agenda_esp_on/utils/prefs.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -9,6 +15,12 @@ class LoginPage extends StatefulWidget {
 
   @override
   _LoginPageState createState() => _LoginPageState();
+}
+
+ Future<String> _buscarToken() async {
+  var setup = await Prefs.getString('user.prefs');
+  Map<String, dynamic> mapResponse = json.decode(setup);
+ return (mapResponse['token']);
 }
 
 class _LoginPageState extends State<LoginPage> {
@@ -133,38 +145,42 @@ class _LoginPageState extends State<LoginPage> {
       onPressed: () async {
         String email = _emailController.text;
         String senha = _senhaController.text;
-        // if(_formKey.currentState!.validate()){
-        //   var usser = await LoginApi.login(email, senha);
-        //   if(usser != null && usser.token!=''){
-        //     // print(usser.token );
-        //     var usuario = await UsuarioApi.bucarUsuEmail(usser.email, usser.senha, usser.token);
-        //     if(usuario != null){
-        //       var perfil = await Prefs.getString('perfil') as String;
-        //
-        //       switch(perfil) {
-        //         case 'PACIENTE':
-        //           Navigator.of(context).pushReplacementNamed('/menuPageUsuario');
-        //           break;
-        //         case 'MEDICO':
-        //           Navigator.of(context).pushReplacementNamed('/menuPageMedico');
-        //           break;
-        //         case 'ADMIN':
-        //           Navigator.of(context).pushReplacementNamed('/menuPageAdmin');
-        //           break;
-        //         default:
-        //           alert(context,"Perfil não encontrado..");
-        //           break;
-        //       }
-        //     }else {
-        //       alert(context,"Falha no Cadastro Usuário..");
-        //     }
-        //     //   Navigator.of(context).pushReplacementNamed('/menuPageUsuario');
-        //   } else {
-        //     alert(context,"Login INVÁLIDO");
-        //   }
-        // } else{
-        //   // FocusScope.of(context).requestFocus(new FocusNode());
-        // }
+        if (_formKey.currentState!.validate()) {
+          var resposta = await LoginApi.login(email, senha);
+          if (resposta == 200) {
+            var token =await _buscarToken();
+            //    var usuario = await UsuarioApi.bucarUsuEmail(user.email, user.senha, user.token);
+            var usuario = 'ok';
+            if (usuario != null) {
+              // var perfil = await Prefs.getString('perfil') as String;
+              var perfil = 'PACIENTE';
+              switch (perfil) {
+                case 'PACIENTE':
+                  ////////////           print(await Prefs.getString('user.prefs'));
+                  //     Navigator.of(context).pushReplacementNamed('/menuPageUsuario');
+                  break;
+                case 'MEDICO':
+                  Navigator.of(context).pushReplacementNamed('/menuPageMedico');
+                  break;
+                case 'ADMIN':
+                  Navigator.of(context).pushReplacementNamed('/menuPageAdmin');
+                  break;
+                default:
+                  alert(context, "Perfil não encontrado..");
+                  break;
+              }
+            } else {
+              alert(context, "Falha no Cadastro Usuário..");
+            }
+            //   Navigator.of(context).pushReplacementNamed('/menuPageUsuario');
+          } else if(resposta == 401) {
+            alert(context, "Login INVÁLIDO");
+          } else{
+            alert(context, "Servidor não encontrado..");
+          }
+        } else {
+          // FocusScope.of(context).requestFocus(new FocusNode());
+        }
       },
     )));
   }

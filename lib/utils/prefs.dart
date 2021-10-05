@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Prefs {
@@ -33,18 +35,6 @@ class Prefs {
   }
 
   static void setString(String key, String s) async {
-    var prefs = await SharedPreferences.getInstance();
-
-    prefs.setString(key, s);
-  }
-
-  static Future<String> getDouble(String key) async {
-    var prefs = await SharedPreferences.getInstance();
-
-    return prefs.getString(key) ?? "";
-  }
-
-  static void setDouble(String key, String s) async {
     var prefs = await SharedPreferences.getInstance();
 
     prefs.setString(key, s);
