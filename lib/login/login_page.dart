@@ -24,7 +24,7 @@ class _LoginPageState extends State<LoginPage> {
         centerTitle: true,
         actions: <Widget>[
           IconButton(
-            icon: Icon(Icons.refresh),
+            icon: Icon(Icons.clear),
             onPressed: () {
               _resetarPageLogin();
             },
