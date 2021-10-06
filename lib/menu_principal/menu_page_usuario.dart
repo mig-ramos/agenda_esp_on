@@ -1,5 +1,7 @@
+import 'package:agenda_esp_on/apis/agenda_api.dart';
 import 'package:agenda_esp_on/components/alert.dart';
 import 'package:agenda_esp_on/components/navigation_drawer_usuario.dart';
+import 'package:agenda_esp_on/models/agendamentos.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -13,12 +15,12 @@ class MenuPageUsuario extends StatefulWidget {
 }
 class _MenuPageUsuarioState extends State<MenuPageUsuario> {
 
-//  late Future<List<Compromisso>> _compromisso;
+  late Future<List<Agendamentos>> _agendamento;
 
   @override
   initState() {
     super.initState();
- //   _compromisso = AgendaApi.getAgenda();
+   _agendamento = AgendaApi.getAgenda();
   }
 
   @override
@@ -28,21 +30,18 @@ class _MenuPageUsuarioState extends State<MenuPageUsuario> {
           title: Text(widget.title),
           centerTitle: true,
           actions: [
-
             IconButton(
               icon: Icon(Icons.refresh,color: Colors.white,),
               onPressed: () {
                 setState(() {
-              //    _compromisso = AgendaApi.getAgenda();
+                 _agendamento = AgendaApi.getAgenda();
                 });
               },
             ),
-
-
           ],
         ),
         body: FutureBuilder(
-         // future: _compromisso,
+         future: _agendamento,
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               print(snapshot.data);
@@ -94,7 +93,6 @@ class _MenuPageUsuarioState extends State<MenuPageUsuario> {
         drawer: NavigationDrawerUsuario());
   }
 
-  // _deletarAgendamento(context, Teste teste){
   _deletarAgendamento(context, comp) {
     showDialog(
         context: context,
@@ -176,12 +174,12 @@ class _MenuPageUsuarioState extends State<MenuPageUsuario> {
 
   _deleteAgenda(id) async {
     print(id);
-    // int response = await AgendaApi.delAgenda(id);
-    // if (response == 204) {
-    //   setState(() {
-    //     alert(context, 'Ok. Solicitação atendida \nDeletado o agendamento.');
-    //     _compromisso = AgendaApi.getAgenda();
-    //   });
-    // }
+    int response = await AgendaApi.delAgenda(id);
+    if (response == 204) {
+      setState(() {
+        alert(context, 'Ok. Solicitação atendida \nDeletado o agendamento.');
+        _agendamento = AgendaApi.getAgenda();
+      });
+    }
   }
 }

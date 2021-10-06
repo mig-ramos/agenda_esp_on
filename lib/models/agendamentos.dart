@@ -1,4 +1,4 @@
-class Compromisso {
+class Agendamentos{
 
   late String id;
   late String especial;
@@ -7,7 +7,7 @@ class Compromisso {
   late String hora;
   late String motivo;
 
-  Compromisso(id, especial, medico, data, hora, motivo){
+  Agendamentos(id, especial, medico, data, hora, motivo){
     this.id = id;
     this.especial = especial;
     this.medico = medico;
@@ -18,6 +18,6 @@ class Compromisso {
 
   @override
   String toString() {
-    return 'Compromisso{id: $id, especial: $especial, medico: $medico, data: $data, hora: $hora, motivo: $motivo}';
+    return 'Agendamentos{id: $id, especial: $especial, medico: $medico, data: $data, hora: $hora, motivo: $motivo}';
   }
 }

@@ -74,7 +74,6 @@ class _EditarUsuarioPageState extends State<EditarUsuarioPage> {
     ),
   );
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -239,14 +238,11 @@ class _EditarUsuarioPageState extends State<EditarUsuarioPage> {
   }
 
   _onClickEditar(context) async {
-    //   print("Confirmar!");
     int id = _id;
     String nome = (_txtNome.text).capitalizeFirstofEach;
     String email = _txtEmail.text;
     String senha = _txtSenha.text;
     DateTime dataNascimento = currentDate;
-
-    // print("Envio de variáveis: Id $id Nome $nome, Email $email, Senha $senha, Data nascimento: $dataNascimento");
 
     if (!_formKey.currentState!.validate()) {
       return;
