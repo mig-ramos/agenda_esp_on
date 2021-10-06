@@ -1,7 +1,9 @@
 import 'dart:convert';
 
+import 'package:agenda_esp_on/apis/usuario_api.dart';
 import 'package:agenda_esp_on/components/alert.dart';
 import 'package:agenda_esp_on/utils/function_utils.dart';
+import 'package:agenda_esp_on/utils/prefs.dart';
 import 'package:agenda_esp_on/utils/string_capitalize.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -45,7 +47,7 @@ class _EditarUsuarioPageState extends State<EditarUsuarioPage> {
   }
   initState() {
     super.initState();
-  //  _recuperaDados();
+ _recuperaDados();
   }
 
   final ButtonStyle _elevatedButtonOk = ElevatedButton.styleFrom(
@@ -254,37 +256,37 @@ class _EditarUsuarioPageState extends State<EditarUsuarioPage> {
       _progress = true;
     });
 
-    // var usuario = await UsuarioApi.saveUsu(id, nome, email, senha, dataNascimento);
-    //
-    // switch(usuario.statusCode){
-    //   case 204:
-    //     Navigator.pop(context);
-    //     alert(context,'Usuário Alterado \ncom sussesso!!');
-    //     break;
-    //   case 201:
-    //     Navigator.pop(context);
-    //     alert(context,'Usuário Cadastrado \ncom sussesso!!');
-    //     break;
-    //   case 500:
-    //     alert(context,'Email: $email \njá Cadastrado..');
-    //     break;
-    //   default:
-    // }
+    var usuario = await UsuarioApi.saveUsu(id, nome, email, senha, dataNascimento);
+
+    switch(usuario.statusCode){
+      case 204:
+        Navigator.pop(context);
+        alert(context,'Usuário Alterado \ncom sussesso!!');
+        break;
+      case 201:
+        Navigator.pop(context);
+        alert(context,'Usuário Cadastrado \ncom sussesso!!');
+        break;
+      case 500:
+        alert(context,'Email: $email \njá Cadastrado..');
+        break;
+      default:
+    }
 
     setState(() {
       _progress = false;
     });
   }
 
-  // _recuperaDados() async{
-  //   Map mapResponse = json.decode(await Prefs.getString('usuario.prefs'));
-  //   // print(mapResponse);
-  //   _txtNome.text = mapResponse["nome"];
-  //   _txtEmail.text = mapResponse["email"];
-  //   _txtSenha.text = mapResponse["senha"];
-  //   setState((){
-  //     currentDate = stringToDate(mapResponse["data_nascimento"]);
-  //     _id = mapResponse["id"] as int;
-  //   });
-  // }
+  _recuperaDados() async{
+    Map mapResponse = json.decode(await Prefs.getString('usuario.prefs'));
+    // print(mapResponse);
+    _txtNome.text = mapResponse["nome"];
+    _txtEmail.text = mapResponse["email"];
+    _txtSenha.text = mapResponse["senha"];
+    setState((){
+      currentDate = stringToDate(mapResponse["data_nascimento"]);
+      _id = mapResponse["id"] as int;
+    });
+  }
 }

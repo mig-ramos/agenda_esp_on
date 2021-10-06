@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:agenda_esp_on/configuratios/setup.dart';
+import 'package:agenda_esp_on/configurations/setup.dart';
 import 'package:agenda_esp_on/models/user.dart';
 import 'package:http/http.dart' as http;
 

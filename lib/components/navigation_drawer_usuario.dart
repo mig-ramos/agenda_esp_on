@@ -1,3 +1,4 @@
+import 'package:agenda_esp_on/utils/prefs.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -146,11 +147,11 @@ class NavigationDrawerUsuario extends StatelessWidget {
       //   return IdAgenda(title: 'AgendaEspOn', agenda: AgendaApi().getAgendaId());}),
         break;
       case 4:
-        // Prefs.setString('user.prefs', '');
-        // Prefs.setString('usuario.prefs', '');
+        Prefs.setString('user.prefs', '');
+        Prefs.setString('usuario.prefs', '');
         // Prefs.setString('email', '');
         // Prefs.setString('tokenjwt', '');
-        // Prefs.setString('perfil', '');
+        Prefs.setString('perfil', '');
         Navigator.pop(context);
         break;
     }

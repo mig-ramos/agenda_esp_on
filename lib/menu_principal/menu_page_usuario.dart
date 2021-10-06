@@ -24,7 +24,6 @@ class _MenuPageUsuarioState extends State<MenuPageUsuario> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // drawer: NavigationDrawerWidget(),
         appBar: AppBar(
           title: Text(widget.title),
           centerTitle: true,

@@ -1,7 +1,9 @@
 import 'dart:convert';
 
+import 'package:agenda_esp_on/apis/usuario_api.dart';
 import 'package:agenda_esp_on/components/alert.dart';
 import 'package:agenda_esp_on/utils/function_utils.dart';
+import 'package:agenda_esp_on/utils/prefs.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -24,6 +26,7 @@ class _EditarSenhaUsuarioState extends State<EditarSenhaUsuario> {
   String _txtNome= '';
   String _txtEmail = '';
   late DateTime _dataNascimento;
+  String _senhaAtual = '';
 
   var _progress = false;
 
@@ -33,7 +36,7 @@ class _EditarSenhaUsuarioState extends State<EditarSenhaUsuario> {
 
   void initState() {
     super.initState();
-    //_recuperaDados();
+    _recuperaDados();
   }
 
   final ButtonStyle _elevatedButtonOk = ElevatedButton.styleFrom(
@@ -214,9 +217,9 @@ class _EditarSenhaUsuarioState extends State<EditarSenhaUsuario> {
     String senhaAtual = _txtSenhaAtual.text;
     String novaSenha = _txtNovaSenha.text;
     String repetirSenha = _txtRepetirSenha.text;
-    if (novaSenha == repetirSenha){
-      senhaAtual = novaSenha;
-    }
+    // if (novaSenha == repetirSenha){
+    //   senhaAtual = novaSenha;
+    // }
 
     // print("Nome: $nome Email: $email Senha atual: $senhaAtual, Nova senha: $novaSenha, Repetir senha: $repetirSenha");
 
@@ -227,31 +230,40 @@ class _EditarSenhaUsuarioState extends State<EditarSenhaUsuario> {
     setState(() {
       _progress = true;
     });
-    print('Aseguir o token');
-  //   print(await Prefs.getString('tokenjwt'));
-    //   //
-    //   //   var usuario = await UsuarioApi.mudaSenhaUsu(id, senhaAtual,nome, email, dataNascimento);
-    //   //
-    //   //   switch(usuario.statusCode){
-    //   //     case 204:
-    //   //       Navigator.pop(context);
-    //   //       alert(context,'Senha Alterada \ncom sussesso!!');
-    //   //       break;
-    //   //     default:
-    //   //   }
-    //   //
-    //   //   setState(() {
-    //   //     _progress = false;
-    //   //   });
-    //   // }
-    //   // _recuperaDados() async{
-    //   //   Map mapResponse = json.decode(await Prefs.getString('usuario.prefs'));
-    //   //   setState((){
-    //   //     _id = mapResponse["id"] as int;
-    //   //     _txtNome = mapResponse["nome"];
-    //   //     _txtEmail = mapResponse["email"];
-    //   //     _txtSenhaAtual.text = mapResponse["senha"];
-    //   //     _dataNascimento = stringToDate(mapResponse["data_nascimento"]);
-    //   //   });
+    // print('Aseguir o token');
+    // print(await Prefs.getString('tokenjwt'));
+    print('$senhaAtual \nDo Bnaco $_senhaAtual');
+    if(_senhaAtual != senhaAtual){
+      alert(context,'Senha Atual \nnão é a mesma!!');
+    } else if (novaSenha == repetirSenha && _senhaAtual == senhaAtual){
+      senhaAtual = novaSenha;
+      var usuario = await UsuarioApi.mudaSenhaUsu(id, senhaAtual,nome, email, dataNascimento);
+      switch(usuario.statusCode){
+        case 204:
+          Navigator.pop(context);
+          alert(context,'Senha Alterada \ncom sussesso!!');
+          break;
+        default:
+          alert(context,'Alteração de Senha \nfalhou!!');
+      }
+    } else {
+      alert(context,'Repetir senha \nnão é igual!!');
+    }
+
+
+        setState(() {
+          _progress = false;
+        });
+      }
+      _recuperaDados() async{
+        Map mapResponse = json.decode(await Prefs.getString('usuario.prefs'));
+        setState((){
+          _id = mapResponse["id"] as int;
+          _txtNome = mapResponse["nome"];
+          _txtEmail = mapResponse["email"];
+          _senhaAtual = mapResponse["senha"];
+          _txtSenhaAtual.text = '';
+          _dataNascimento = stringToDate(mapResponse["data_nascimento"]);
+        });
       }
 }

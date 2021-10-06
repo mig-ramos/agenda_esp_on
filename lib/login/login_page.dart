@@ -1,9 +1,8 @@
 import 'dart:convert';
-
 import 'package:agenda_esp_on/apis/login_api.dart';
+import 'package:agenda_esp_on/apis/usuario_api.dart';
 import 'package:agenda_esp_on/components/alert.dart';
 import 'package:agenda_esp_on/components/styles_buttons.dart';
-import 'package:agenda_esp_on/configuratios/setup.dart';
 import 'package:agenda_esp_on/utils/prefs.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -149,15 +148,13 @@ class _LoginPageState extends State<LoginPage> {
           var resposta = await LoginApi.login(email, senha);
           if (resposta == 200) {
             var token =await _buscarToken();
-            //    var usuario = await UsuarioApi.bucarUsuEmail(user.email, user.senha, user.token);
-            var usuario = 'ok';
+                var usuario = await UsuarioApi.bucarUsuEmail(email, senha, token);
             if (usuario != null) {
-              // var perfil = await Prefs.getString('perfil') as String;
-              var perfil = 'PACIENTE';
-              switch (perfil) {
+              var perfil = await Prefs.getString('perfil') as String;
+               switch (perfil) {
                 case 'PACIENTE':
                   ////////////           print(await Prefs.getString('user.prefs'));
-                  //     Navigator.of(context).pushReplacementNamed('/menuPageUsuario');
+                  Navigator.of(context).pushReplacementNamed('/menuPageUsuario');
                   break;
                 case 'MEDICO':
                   Navigator.of(context).pushReplacementNamed('/menuPageMedico');
