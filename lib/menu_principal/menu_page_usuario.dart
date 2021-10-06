@@ -85,6 +85,7 @@ class _MenuPageUsuarioState extends State<MenuPageUsuario> {
         ),
         floatingActionButton: FloatingActionButton(
           child: Icon(Icons.add),
+          backgroundColor: Colors.amber,
           onPressed: () async {
             ///PROGRAMAR CADASTRO NAVIGATOR
             Navigator.of(context).pushNamed('/cadAgendaPage');
