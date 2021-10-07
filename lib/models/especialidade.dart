@@ -5,7 +5,7 @@ class Especialidade {
   late int id;
   late String nome;
   late String descricao;
-  late List<dynamic> medicos;
+ late List<dynamic> medicos;
 
   Especialidade({required this.id, required this.nome, required this.descricao});
 
@@ -13,7 +13,7 @@ class Especialidade {
     id = json['id'];
     nome = json['nome'];
     descricao = json['descricao'];
-    medicos = json['medicos'];
+   medicos = json['medicos'];
   }
 
   Map<String, dynamic> toJson() {
@@ -21,7 +21,7 @@ class Especialidade {
     data['id'] = this.id;
     data['nome'] = this.nome;
     data['descricao'] = this.descricao;
-    data['medicos'] = this.medicos;
+   data['medicos'] = this.medicos;
     return data;
   }
 
@@ -49,6 +49,7 @@ class Especialidade {
 
   @override
   String toString() {
-    return 'Especialidade{id: $id, nome: $nome, descricao: $descricao, medicos: $medicos}';
+   // return 'Especialidade{id: $id, nome: $nome, descricao: $descricao}';
+   return 'Especialidade{id: $id, nome: $nome, descricao: $descricao, medicos: $medicos}';
   }
 }

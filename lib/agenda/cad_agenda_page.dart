@@ -1,4 +1,9 @@
+import 'package:agenda_esp_on/apis/agenda_api.dart';
+import 'package:agenda_esp_on/apis/especialidade_api.dart';
+import 'package:agenda_esp_on/apis/medico_api.dart';
+import 'package:agenda_esp_on/apis/motivo_api.dart';
 import 'package:agenda_esp_on/components/alert.dart';
+import 'package:agenda_esp_on/configurations/setup.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -23,7 +28,6 @@ class _CadAgendaPageState extends State<CadAgendaPage> {
   void initState() {
     super.initState();
     _recuperaDados();
-    _recuperaTipoConsulta();
   }
 
   List<String> _listaEspecial = [];
@@ -137,9 +141,10 @@ class _CadAgendaPageState extends State<CadAgendaPage> {
               //   color: Colors.pink,
               // ),
               onChanged: (String? newValue) {
-                setState(() {
+                setState(() async {
                   _dropEspecialidadeValue = newValue!;
                   _dropMedicoValue = 'Buscar..';
+                  await EspecialidadeApi.dropEspecialidades(_dropEspecialidadeValue);
                   _recuperaMedico(
                       _dropEspecialidadeValue); // AQUI ESOLHE OS MEDICOS
                 });
@@ -265,7 +270,8 @@ class _CadAgendaPageState extends State<CadAgendaPage> {
               onChanged: (String? newValue) {
                 setState(() {
                   _dropHoraValue = newValue!;
-             //     AgendaApi.getHora(_dropHoraValue);
+                  _recuperaTipoConsulta();
+                //  AgendaApi.getHora(_dropHoraValue);
                 });
               },
               // items: <String>[
@@ -383,21 +389,29 @@ class _CadAgendaPageState extends State<CadAgendaPage> {
   }
 
   _onClickCadastrar(context) async {
-    print("Agendar!");
 
-    String especialidade = _dropEspecialidadeValue;
+  //  String especialidade = _dropEspecialidadeValue;
     String medico = _dropMedicoValue;
     DateTime dataAgenda = currentDate;
     String hora = _dropHoraValue;
     String tipoConsulta = _dropTipoConsultaValue;
+
+    var listEsp =  await Especial.get();
+    // print('Olha o id da Especialidade');
+    // print( await listEsp!.id);
+
+    int _idEspe = listEsp!.id;
+    int _idMedi = 4;
+    int _idHora = 8;
+    int _idTipo =0;
+
 
     // AgendaApi.getEspecialidades(especialidade);
     // AgendaApi.getMedico(medico);
     // AgendaApi.getHora(hora);
     // AgendaApi.getTipoConsulta(tipoConsulta);
 
-    print(
-        'BOTÃO GRAVAR Especialidade: $especialidade - Médico: $medico -  Hora: $hora - Tipo de Consulta $tipoConsulta');
+  //  print('BOTÃO GRAVAR Especialidade: $especialidade - Médico: $medico - Data: ${DateFormat("dd/MM/yyyy").format(currentDate)} - Hora: $hora - Tipo de Consulta $tipoConsulta');
 
     if (_dropEspecialidadeValue == 'Buscar..') {
       alert(context, 'Qual a Especialidade?');
@@ -408,22 +422,38 @@ class _CadAgendaPageState extends State<CadAgendaPage> {
     } else if (_dropTipoConsultaValue == 'Buscar..') {
       alert(context, 'Qual o Motivo?');
     } else {
-      // var response = await AgendaApi.saveAgenda(
-      //     DateFormat("yyyy-MM-dd").format(dataAgenda));
-      // switch (response) {
-      //   case 204:
-      //     Navigator.pop(context);
-      //     alert(context, 'Alterado com sussesso!');
-      //     break;
-      //   case 201:
-      //     Navigator.pop(context);
-      //     alert(context, 'Agendado com sussesso!\nClick no Botão Atualizar\ncanto superior direito.');
-      //     break;
-      //   case 500:
-      //     Navigator.pop(context);
-      //     alert(context, 'Falha no Servidor!');
-      //     break;
-      // }
+
+
+
+      for(int e = 0; e < _listaEspecial.length; e++){
+        if(_listaEspecial[e] == _dropEspecialidadeValue){
+          _idEspe = e;
+        }
+      }
+      for(int t = 0; t < _tipoConsulta.length; t++){
+        if(_tipoConsulta[t] == _dropTipoConsultaValue){
+          _idTipo = t;
+        }
+      }
+
+   print('BOTÃO GRAVAR-  Especialidade: $_idEspe - Médico: $_idMedi - Data: ${DateFormat("dd/MM/yyyy").format(currentDate)} - Hora: $_idHora - Tipo de Consulta $_idTipo');
+
+      var response = await AgendaApi.salvaAgenda(
+          DateFormat("yyyy-MM-dd").format(dataAgenda),_idEspe,_idTipo,_idMedi,_idHora);
+      switch (response) {
+        case 204:
+          Navigator.pop(context);
+          alert(context, 'Alterado com sussesso!');
+          break;
+        case 201:
+          Navigator.pop(context);
+          alert(context, 'Agendado com sussesso!\nClick no Botão Atualizar\ncanto superior direito.');
+          break;
+        case 500:
+          Navigator.pop(context);
+          alert(context, 'Falha no Servidor!');
+          break;
+      }
     }
 
     if (!_formKey.currentState!.validate()) {
@@ -448,39 +478,9 @@ class _CadAgendaPageState extends State<CadAgendaPage> {
     });
   }
 
-  _recuperaHora(DateTime currentDate) async {
-    var data = DateFormat("yyyy-MM-dd").format(currentDate);
-    if (_dropMedicoValue != "Buscar.." || _dropMedicoValue != "") {
-      List<String> horas = [];
- //     horas = await AgendaApi.getHorasAgendamentos(_dropMedicoValue, data);
-      setState(() {
-        _listaHoras = horas;
-      });
-    }
-  }
-
-  _recuperaMedico(String dropMed) async {
-    List<String> medicos = [];
-    List<String> listaMedicos = [];
-    for (int i = 0; i < _listaEspecial.length; i++) {
-      //   print(_dropEspecialidadeValue);
-      if (_listaEspecial[i] == _dropEspecialidadeValue) {
-   //     medicos = await EspecialidadeApi.getMedPorEspecialidadeId(i);
-        if (medicos.length != 0) {
-          listaMedicos = medicos;
-        }
-        print(_listaEspecial.length);
-        print(medicos.length);
-      }
-
-      setState(() {
-        _listaMedicos = listaMedicos;
-      });
-    }
-  }
-
   _recuperaDados() async {
-//    List<String>? lista = await EspecialidadeApi.getEspecialidades();
+    String nome = '';
+   var lista = await EspecialidadeApi.dropEspecialidades(nome);
     // Teste de subtração de hora medico
     //  if (_dropMedicoValue != 'Buscar..'){
     //    List<String> horas = [];
@@ -490,13 +490,37 @@ class _CadAgendaPageState extends State<CadAgendaPage> {
     //    });
     //  }
     setState(() {
-  //    _listaEspecial = lista;
+      _listaEspecial = lista!;
     });
+  }
+
+  _recuperaMedico(String especialidade) async {
+    for (int i = 0; i < _listaEspecial.length; i++) {
+      //   print(_dropEspecialidadeValue);
+      if (_listaEspecial[i] == _dropEspecialidadeValue) {
+        var lista = await MedicoApi.dropMedicos(i);
+        setState(() {
+          _listaMedicos = lista!;
+        });
+      }
+    }
+  }
+
+  _recuperaHora(DateTime currentDate) async {
+    var data = DateFormat("yyyy-MM-dd").format(currentDate);
+    if (_dropMedicoValue != "Buscar.." || _dropMedicoValue != "") {
+      List<String> horas = [];
+      horas = (await AgendaApi.dropHoras(_dropMedicoValue, data))!;
+
+      setState(() {
+        _listaHoras = horas;
+      });
+    }
   }
 
   _recuperaTipoConsulta() async {
     List<String> tipoConsulta = [];
- //   tipoConsulta = await TipoConsultaApi.getTipoConsultas();
+    tipoConsulta = await MotivoApi.dropMotivo();
     setState(() {
       _tipoConsulta = tipoConsulta;
     });
