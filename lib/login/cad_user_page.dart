@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/intl.dart';
 
-
 class CadUserPage extends StatefulWidget {
   const CadUserPage({Key? key, required this.title}) : super(key: key);
   final String title;
@@ -16,7 +15,6 @@ class CadUserPage extends StatefulWidget {
 }
 
 class _CadUserPageState extends State<CadUserPage> {
-
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   TextEditingController _txtNome = TextEditingController();
   TextEditingController _txtEmail = TextEditingController();
@@ -30,14 +28,15 @@ class _CadUserPageState extends State<CadUserPage> {
       fontWeight: FontWeight.normal,
       fontSize: 22,
       color: Colors.white,
-  decoration: TextDecoration.underline, decorationColor: Colors.black38 );
+      decoration: TextDecoration.underline,
+      decorationColor: Colors.black38);
 
   TextStyle _styleValor1 = TextStyle(
-    fontWeight: FontWeight.normal,
-    fontSize: 22,
-    color: Colors.blue,
-      decoration: TextDecoration.underline, decorationColor: Colors.black38
-  );
+      fontWeight: FontWeight.normal,
+      fontSize: 22,
+      color: Colors.blue,
+      decoration: TextDecoration.underline,
+      decorationColor: Colors.black38);
 
   DateTime currentDate = DateTime.now();
 
@@ -94,152 +93,147 @@ class _CadUserPageState extends State<CadUserPage> {
           key: _formKey,
           child: ListView(
             children: [
-            TextFormField(
-            controller: _txtNome,
-            validator: (value) {
-              if (value!.isEmpty) {
-                return 'Informe seu Email';
-              }
-              return null;
-            },
-            keyboardType: TextInputType.text,
-            style: TextStyle(
-              color: Colors.blue,
-              fontSize: 22,
-            ),
-            decoration: InputDecoration(
-              labelText: "Nome",
-              labelStyle: TextStyle(
-                color: Colors.black,
-                // fontWeight: FontWeight.bold,
-                fontSize: 22,
+              TextFormField(
+                controller: _txtNome,
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'Informe seu Email';
+                  }
+                  return null;
+                },
+                keyboardType: TextInputType.text,
+                style: TextStyle(
+                  color: Colors.blue,
+                  fontSize: 22,
+                ),
+                decoration: InputDecoration(
+                  labelText: "Nome",
+                  labelStyle: TextStyle(
+                    color: Colors.black,
+                    // fontWeight: FontWeight.bold,
+                    fontSize: 22,
+                  ),
+                  hintText: "Digite o seu nome",
+                  hintStyle: TextStyle(
+                    color: Colors.black,
+                    fontSize: 18,
+                  ),
+                ),
               ),
-              hintText: "Digite o seu nome",
-              hintStyle: TextStyle(
-                color: Colors.black,
-                fontSize: 18,
+              TextFormField(
+                controller: _txtEmail,
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'Informe seu Email';
+                  }
+                  return null;
+                },
+                keyboardType: TextInputType.emailAddress,
+                style: TextStyle(
+                  color: Colors.blue,
+                  fontSize: 22,
+                ),
+                decoration: InputDecoration(
+                  labelText: "Email",
+                  labelStyle: TextStyle(
+                    color: Colors.black,
+                    fontSize: 22,
+                  ),
+                  hintText: "Digite o seu email",
+                  hintStyle: TextStyle(
+                    color: Colors.black,
+                    fontSize: 18,
+                  ),
+                ),
               ),
-            ),
+              TextFormField(
+                controller: _txtSenha,
+                validator: (value) {
+                  if (value!.length < 2) {
+                    return "Senha precisa ter mais de 2 caracteres";
+                  }
+                  return null;
+                },
+                obscureText: true,
+                keyboardType: TextInputType.visiblePassword,
+                style: TextStyle(
+                  color: Colors.blue,
+                  fontSize: 22,
+                ),
+                decoration: InputDecoration(
+                  labelText: "Senha",
+                  labelStyle: TextStyle(
+                    color: Colors.black,
+                    fontSize: 22,
+                  ),
+                  hintText: "Digite a sua Senha",
+                  hintStyle: TextStyle(
+                    color: Colors.black,
+                    fontSize: 18,
+                  ),
+                ),
+              ),
+              Container(
+                height: 100,
+                child: Row(
+                  children: [
+                    SizedBox(
+                      width: 200,
+                      child: Text(
+                        'Data nascimento: ',
+                        style: _styleCampo,
+                      ),
+                    ),
+                    TextButton(
+                      onPressed: () => _selectDate(context),
+                      child: Text(DateFormat("dd/MM/yyyy").format(currentDate),
+                          style: (click == true ? _styleValor : _styleValor1)),
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                height: 46,
+                margin: EdgeInsets.only(top: 20),
+                child: ElevatedButton(
+                  style: _elevatedButtonOk,
+                  child: _progress
+                      ? CircularProgressIndicator(
+                          valueColor: AlwaysStoppedAnimation(Colors.white),
+                        )
+                      : Text(
+                          "Cadastrar",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 22,
+                          ),
+                        ),
+                  onPressed: () {
+                    _onClickCadastrar(context);
+                  },
+                ),
+              ),
+              Container(
+                height: 46,
+                margin: EdgeInsets.only(top: 20),
+                child: ElevatedButton(
+                  style: _elevatedButtonNo,
+                  child: Text(
+                    "Cancelar",
+                    style: TextStyle(
+                      color: Colors.green,
+                      fontSize: 22,
+                    ),
+                  ),
+                  onPressed: () {
+                    _onClickCancelar(context);
+                  },
+                ),
+              ),
+            ],
           ),
-          TextFormField(
-            controller: _txtEmail,
-            validator: (value) {
-              if (value!.isEmpty) {
-                return 'Informe seu Email';
-              }
-              return null;
-            },
-            keyboardType: TextInputType.emailAddress,
-            style: TextStyle(
-              color: Colors.blue,
-              fontSize: 22,
-            ),
-            decoration: InputDecoration(
-              labelText: "Email",
-              labelStyle: TextStyle(
-                color: Colors.black,
-                fontSize: 22,
-              ),
-              hintText: "Digite o seu email",
-              hintStyle: TextStyle(
-                color: Colors.black,
-                fontSize: 18,
-              ),
-            ),
-          ),
-          TextFormField(
-            controller: _txtSenha,
-            validator: (value) {
-              if (value!.length < 2) {
-                return "Senha precisa ter mais de 2 caracteres";
-              }
-              return null;
-            },
-            obscureText: true,
-            keyboardType: TextInputType.visiblePassword,
-            style: TextStyle(
-              color: Colors.blue,
-              fontSize: 22,
-            ),
-            decoration: InputDecoration(
-              labelText: "Senha",
-              labelStyle: TextStyle(
-                color: Colors.black,
-                fontSize: 22,
-              ),
-              hintText: "Digite a sua Senha",
-              hintStyle: TextStyle(
-                color: Colors.black,
-                fontSize: 18,
-              ),
-            ),
-          ),
-          Container(
-            height: 100,
-            child: Row(
-              children: [
-              SizedBox(
-              width: 200,
-             child: Text(
-                'Data nascimento: ',
-                style: _styleCampo,
-              ),
-            ),
-
-            TextButton(
-
-              onPressed: () => _selectDate(context),
-
-              child: Text(
-                  DateFormat("dd/MM/yyyy").format(currentDate),
-                  style: (click == true ? _styleValor : _styleValor1)),),
-
-        ],
-      ),
-          ),
-      Container(
-        height: 46,
-        margin: EdgeInsets.only(top: 20),
-        child: ElevatedButton(
-          style: _elevatedButtonOk,
-          child: _progress
-              ? CircularProgressIndicator(
-            valueColor: AlwaysStoppedAnimation(Colors.white),
-          )
-              : Text(
-            "Cadastrar",
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 22,
-            ),
-          ),
-          onPressed: () {
-            _onClickCadastrar(context);
-          },
         ),
       ),
-      Container(
-        height: 46,
-        margin: EdgeInsets.only(top: 20),
-        child: ElevatedButton(
-          style: _elevatedButtonNo,
-          child: Text(
-            "Cancelar",
-            style: TextStyle(
-              color: Colors.green,
-              fontSize: 22,
-            ),
-          ),
-          onPressed: () {
-            _onClickCancelar(context);
-          },
-        ),
-      ),
-      ],
-    ),)
-    ,
-    )
-    ,
     );
   }
 
@@ -256,7 +250,8 @@ class _CadUserPageState extends State<CadUserPage> {
     String senha = _txtSenha.text;
     DateTime dataNascimento = currentDate;
 
-    print("Id $id, Nome $nome, Email $email, Senha $senha, Data nascimento: $dataNascimento");
+    print(
+        "Id $id, Nome $nome, Email $email, Senha $senha, Data nascimento: $dataNascimento");
 
     if (!_formKey.currentState!.validate()) {
       return;
@@ -266,19 +261,20 @@ class _CadUserPageState extends State<CadUserPage> {
       _progress = true;
     });
 
-    var usuario = await UsuarioApi.saveUsu(id, nome, email, senha, dataNascimento);
+    var usuario =
+        await UsuarioApi.saveUsu(id, nome, email, senha, dataNascimento);
 
-    switch(usuario.statusCode){
+    switch (usuario.statusCode) {
       case 200:
         Navigator.pop(context);
-        alert(context,'Usuário Alterado \ncom sussesso!!');
+        alert(context, 'Usuário Alterado \ncom sussesso!!');
         break;
       case 201:
         Navigator.pop(context);
-        alert(context,'Usuário Cadastrado \ncom sussesso!!');
+        alert(context, 'Usuário Cadastrado \ncom sussesso!!');
         break;
       case 500:
-        alert(context,'Email: $email \njá Cadastrado..');
+        alert(context, 'Email: $email \njá Cadastrado..');
         break;
       default:
     }
@@ -286,5 +282,4 @@ class _CadUserPageState extends State<CadUserPage> {
       _progress = false;
     });
   }
-
 }

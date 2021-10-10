@@ -148,12 +148,12 @@ class _LoginPageState extends State<LoginPage> {
           var resposta = await LoginApi.login(email, senha);
           if (resposta == 200) {
             var token =await _buscarToken();
-                var usuario = await UsuarioApi.bucarUsuEmail(email, senha, token);
+                var usuario = await UsuarioApi.bucarUsuPorEmail(email, senha, token);
             if (usuario != null) {
-              var perfil = await Prefs.getString('perfil') as String;
+              var perfil = '';
+              perfil = (usuario.perfis.contains('ADMIN') ? perfil = 'ADMIN' : (usuario.perfis.contains('MEDICO') ? perfil = 'MEDICO': perfil = 'PACIENTE'));
                switch (perfil) {
                 case 'PACIENTE':
-                  ////////////           print(await Prefs.getString('user.prefs'));
                   Navigator.of(context).pushReplacementNamed('/menuPageUsuario');
                   break;
                 case 'MEDICO':

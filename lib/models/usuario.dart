@@ -14,19 +14,19 @@ class Usuario {
   late int crm;
   late String dataInscricao;
 
-  Usuario(
-      { required this.id,
-        required this.nome,
-        required this.email,
-        required this.senha,
-        required this.codigo,
-        required this.instante,
-        required this.ativo,
-        required this.perfis,
-        required this.dataNascimento,
-        required this.crm,
-        required this.dataInscricao,
-      });
+  Usuario({
+    required this.id,
+    required this.nome,
+    required this.email,
+    required this.senha,
+    required this.codigo,
+    required this.instante,
+    required this.ativo,
+    required this.perfis,
+    required this.dataNascimento,
+    required this.crm,
+    required this.dataInscricao,
+  });
 
   Usuario.fromJson(Map<String, dynamic> json) {
     id = json['id'] as int;
@@ -37,9 +37,9 @@ class Usuario {
     instante = json['instante'];
     ativo = json['ativo'];
     perfis = json['perfis'];
-    dataNascimento = (json['data_nascimento']?? '' );
-    crm = (json['crm']?? 0 );
-    dataInscricao = (json['data_inscricao']?? '');
+    dataNascimento = (json['data_nascimento'] ?? '');
+    crm = (json['crm'] ?? 0);
+    dataInscricao = (json['data_inscricao'] ?? '');
   }
 
   Map<String, dynamic> toJson() {
@@ -72,7 +72,7 @@ class Usuario {
 
   static Future<Usuario?> get() async {
     String json = await Prefs.getString("usuario.prefs");
-    if(json.isEmpty) {
+    if (json.isEmpty) {
       return null;
     }
     Map<String, dynamic> map = convert.json.decode(json);

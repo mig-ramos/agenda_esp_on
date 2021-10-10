@@ -22,7 +22,7 @@ class User {
     return data;
   }
 
-  static void clear(){
+  static void clear() {
     Prefs.setString("user.prefs", "");
   }
 
@@ -34,7 +34,7 @@ class User {
 
   static Future<User?> get() async {
     String json = await Prefs.getString("user.prefs");
-    if(json.isEmpty) {
+    if (json.isEmpty) {
       return null;
     }
     Map<String, String> map = convert.json.decode(json);
