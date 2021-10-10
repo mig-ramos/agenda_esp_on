@@ -1,12 +1,13 @@
 import 'dart:convert';
 import 'package:agenda_esp_on/configurations/setup.dart';
+import 'package:agenda_esp_on/models/usuario.dart';
 import 'package:agenda_esp_on/utils/prefs.dart';
 import 'package:http/http.dart' as http;
 import 'package:agenda_esp_on/models/agendamentos.dart';
-
 import 'hora_api.dart';
 
 class AgendaApi {
+
   static Future<List<Agendamentos>> getAgenda() async {
     Future<String> _buscarToken() async {
       var setup = await Prefs.getString('user.prefs');
@@ -19,7 +20,7 @@ class AgendaApi {
     var setup = Setups();
 
     var url = Uri.parse(setup.conexao +
-        '/agendamentos/paciente?linesPerPage=8&page=0&direction=DESC');
+        '/agendamentos/paciente?linesPerPage=24&page=0&direction=DESC');
 
     var header = {
       "Content-Type": "application/json",
@@ -29,15 +30,14 @@ class AgendaApi {
     final response = await http.get(url, headers: header);
 
     List<Agendamentos> agendamentos = [];
-
+  //  print(response.statusCode);
     switch (response.statusCode) {
       case 200:
         String body = utf8.decode(response.bodyBytes);
         final mapResponse = jsonDecode(body);
-        print(mapResponse['content'][0]['medico']['nome']);
-
+     //   print(mapResponse['content'][0]['medico']['nome']);
         for (var item in mapResponse['content']) {
-          print(item['especialidade']['nome']);
+     //     print(item['especialidade']['nome']);
           agendamentos.add(Agendamentos(
               item['id'].toString(),
               item['especialidade']['nome'],
@@ -46,12 +46,64 @@ class AgendaApi {
               item['hora']['hora'],
               item['tipoConsulta']['tipoConsulta']));
         }
-        //   print(agendamentos);
+         return agendamentos;
+       break;
+      case 201:
         return agendamentos;
         break;
       default:
         throw Exception('Conexão falhou :(');
     }
+ //   return agendamentos;
+  }
+
+  static Future<List<Agendamentos>> getAgendaHora() async {
+    Future<String> _buscarToken() async {
+      var setup = await Prefs.getString('user.prefs');
+      Map<String, dynamic> mapResponse = json.decode(setup);
+      return (mapResponse['token']);
+    }
+
+    var _token = await _buscarToken();
+
+    var setup = Setups();
+
+    var url = Uri.parse(setup.conexao +
+        '/agendamentos/page?linesPerPage=4&page=0&direction=DESC');
+
+    var header = {
+      "Content-Type": "application/json",
+      "Accept-Charset": "utf-8",
+      "Authorization": "$_token"
+    };
+    final response = await http.get(url, headers: header);
+
+    List<Agendamentos> agendamentos = [];
+    //  print(response.statusCode);
+    switch (response.statusCode) {
+      case 200:
+        String body = utf8.decode(response.bodyBytes);
+        final mapResponse = jsonDecode(body);
+        //   print(mapResponse['content'][0]['medico']['nome']);
+        for (var item in mapResponse['content']) {
+          //     print(item['especialidade']['nome']);
+          agendamentos.add(Agendamentos(
+              item['id'].toString(),
+              item['especialidade']['nome'],
+              item['medico']['nome'],
+              item['dataDisponivel'],
+              item['hora']['hora'],
+              item['tipoConsulta']['tipoConsulta']));
+        }
+        return agendamentos;
+        break;
+      case 201:
+        return agendamentos;
+        break;
+      default:
+        throw Exception('Conexão falhou :(');
+    }
+    //   return agendamentos;
   }
 
   static Future<int> delAgenda(id) async {
@@ -85,20 +137,13 @@ class AgendaApi {
     dropHoras = ['Buscar..'];
     var listaHoras = await HoraApi.listaHora();
 
-    print('Print lista de horas: $listaHoras');
-
-    List<Agendamentos> listaAgenda = await getAgenda();
-    print('Printando lista de agendamentos: $listaAgenda');
+    List<Agendamentos> listaAgenda = await getAgendaHora();
 
     if (listaAgenda.length > 0) {
       for (int i = 0; i < listaAgenda.length; i++) {
-        // print('Print dropMedicoValue: $dropMedicoValue = Médico da Agenda: ${listaAgenda[i].medico}');
-        // print('Print dropData: $data = Data da Agenda: ${listaAgenda[i].data}');
         if (dropMedicoValue == listaAgenda[i].medico &&
             data == listaAgenda[i].data) {
           listaHoras.remove(listaAgenda[i].hora);
-          print(
-              'Print dropMedicoValue: $dropMedicoValue = Médico da Agenda: ${listaAgenda[i].medico}');
         }
       }
     }
@@ -115,10 +160,14 @@ class AgendaApi {
     String _data = dataDisponivel;
     int _idHr = idHora;
     int _idCons = idTipo;
-    // Usu _usu = Usu(id: _idUsu, email: _emailUsu, nome: _nomeUsu);
-    Usu _usu = Usu(id: 2, email: 'p.ephemeris@gmail.com', nome: 'Miguel Arcanjo Ramos');
-    String _obs = '';
 
+    var usu = await Usuario.get();
+    int _idUsu = usu!.id;
+    String _emailUsu = usu.email;
+    String _nomeUsu = usu.nome;
+
+    Usu _usu = Usu(id: _idUsu, email: _emailUsu, nome: _nomeUsu);
+    String _obs = '';
 
     Future<String> _buscarToken() async {
       var setup = await Prefs.getString('user.prefs');
@@ -180,5 +229,4 @@ class AgendaApi {
 
     return response.statusCode;
   }
-
 }

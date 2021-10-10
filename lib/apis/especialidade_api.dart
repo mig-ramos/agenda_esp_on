@@ -68,8 +68,6 @@ class EspecialidadeApi {
     int id = 0;
     Especial espe = Especial(id, nome);
 
-
-
     List<String> dropEspecialidades = [];
     dropEspecialidades = ['Buscar..'];
 

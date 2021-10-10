@@ -244,6 +244,7 @@ class _EditarUsuarioPageState extends State<EditarUsuarioPage> {
     String senha = _txtSenha.text;
     DateTime dataNascimento = currentDate;
 
+    print("Envio de variáveis: Id $id Nome $nome, Email $email, Senha $senha, Data nascimento: $dataNascimento");
     if (!_formKey.currentState!.validate()) {
       return;
     }
@@ -282,7 +283,7 @@ class _EditarUsuarioPageState extends State<EditarUsuarioPage> {
     _txtSenha.text = mapResponse["senha"];
     setState((){
       currentDate = stringToDate(mapResponse["data_nascimento"]);
-      _id = mapResponse["id"] as int;
+      _id = mapResponse["id"];
     });
   }
 }

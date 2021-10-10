@@ -148,6 +148,8 @@ class UsuarioApi {
   static Future<http.Response> saveUsu(int id, String nome,
       String email, String senha, DateTime dataNascimento) async {
 
+
+
     DBCrypt dBCrypt = DBCrypt();
     //const plainPwd = senha;
     String senha_h = dBCrypt.hashpw(senha, dBCrypt.gensalt());
@@ -166,24 +168,29 @@ class UsuarioApi {
     String _data_nascimento = dateTostring(dataNascimento);
     // int _crm = 0;
     // String _data_inscricao = dataInscricao.toString();
-    Future<String> _buscarToken() async {
-      var setup = await Prefs.getString('user.prefs');
-      Map<String, dynamic> mapResponse = json.decode(setup);
-      return (mapResponse['token']);
-    }
 
     var setup = Setups();
+    var _token;
 
-   // var _token = await Prefs.getString('tokenjwt');
-    var _token =await _buscarToken();
-    // print(_token);
+  // var _token = await Prefs.getString('tokenjwt');
+
     var url = '';
 
-    if (_id == 0) {
+    if (_id == 0){
       url = setup.conexao+'/pacientes';
     } else {
+
+      Future<dynamic> _buscarToken() async {
+        var setup = await Prefs.getString('user.prefs');
+        Map<String, dynamic> mapResponse = json.decode(setup);
+        return (mapResponse['token']);
+      }
+      _token =await _buscarToken();
+
       url = setup.conexao+'/pacientes/$_id';
     }
+
+
 
     var header = {
       "Content-Type": "application/json",

@@ -75,7 +75,7 @@ class Usuario {
     if(json.isEmpty) {
       return null;
     }
-    Map<String, String> map = convert.json.decode(json);
+    Map<String, dynamic> map = convert.json.decode(json);
     Usuario usuario = Usuario.fromJson(map);
     return usuario;
   }

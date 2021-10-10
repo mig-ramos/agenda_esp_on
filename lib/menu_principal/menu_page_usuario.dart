@@ -1,9 +1,7 @@
 import 'package:agenda_esp_on/apis/agenda_api.dart';
-import 'package:agenda_esp_on/apis/especialidade_api.dart';
 import 'package:agenda_esp_on/components/alert.dart';
 import 'package:agenda_esp_on/components/navigation_drawer_usuario.dart';
 import 'package:agenda_esp_on/models/agendamentos.dart';
-import 'package:agenda_esp_on/utils/prefs.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -90,9 +88,7 @@ class _MenuPageUsuarioState extends State<MenuPageUsuario> {
           backgroundColor: Colors.amber,
           onPressed: () async {
             ///PROGRAMAR CADASTRO NAVIGATOR
-         //   Navigator.of(context).pushNamed('/cadAgendaPage');
-            print(await Prefs.getString("especial.prefs"));
-        print(await EspecialidadeApi.dropEspecialidades(''));
+           Navigator.of(context).pushNamed('/cadAgendaPage');
           },
         ),
         drawer: NavigationDrawerUsuario());
@@ -134,7 +130,7 @@ class _MenuPageUsuarioState extends State<MenuPageUsuario> {
   }
 
   List<Widget> _listCompromissos(data) {
-    List<Widget> compromissos = [];
+   List<Widget> compromissos = [];
     for (var comp in data) {
       compromissos.add(Card(
         child: SingleChildScrollView(

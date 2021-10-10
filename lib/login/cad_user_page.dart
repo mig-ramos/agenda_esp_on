@@ -1,3 +1,4 @@
+import 'package:agenda_esp_on/apis/usuario_api.dart';
 import 'package:agenda_esp_on/components/alert.dart';
 import 'package:agenda_esp_on/utils/string_capitalize.dart';
 import 'package:flutter/cupertino.dart';
@@ -255,8 +256,7 @@ class _CadUserPageState extends State<CadUserPage> {
     String senha = _txtSenha.text;
     DateTime dataNascimento = currentDate;
 
-    print(
-        "Id $id, Nome $nome, Email $email, Senha $senha, Data nascimento: $dataNascimento");
+    print("Id $id, Nome $nome, Email $email, Senha $senha, Data nascimento: $dataNascimento");
 
     if (!_formKey.currentState!.validate()) {
       return;
@@ -266,22 +266,22 @@ class _CadUserPageState extends State<CadUserPage> {
       _progress = true;
     });
 
-    // var usuario = await UsuarioApi.saveUsu(id, nome, email, senha, dataNascimento);
-    //
-    // switch(usuario.statusCode){
-    //   case 200:
-    //     Navigator.pop(context);
-    //     alert(context,'Usuário Alterado \ncom sussesso!!');
-    //     break;
-    //   case 201:
-    //     Navigator.pop(context);
-    //     alert(context,'Usuário Cadastrado \ncom sussesso!!');
-    //     break;
-    //   case 500:
-    //     alert(context,'Email: $email \njá Cadastrado..');
-    //     break;
-    //   default:
-    // }
+    var usuario = await UsuarioApi.saveUsu(id, nome, email, senha, dataNascimento);
+
+    switch(usuario.statusCode){
+      case 200:
+        Navigator.pop(context);
+        alert(context,'Usuário Alterado \ncom sussesso!!');
+        break;
+      case 201:
+        Navigator.pop(context);
+        alert(context,'Usuário Cadastrado \ncom sussesso!!');
+        break;
+      case 500:
+        alert(context,'Email: $email \njá Cadastrado..');
+        break;
+      default:
+    }
     setState(() {
       _progress = false;
     });

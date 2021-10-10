@@ -50,4 +50,47 @@ class MotivoApi{
     }
     return listaDrop;
   }
+
+  static Future<Motivo> buscaIdMotivo(String motivo) async {
+    int id = 0;
+    Motivo moti = Motivo(id, motivo);
+
+    Future<String> _buscarToken() async {
+      var setup = await Prefs.getString('user.prefs');
+      Map<String, dynamic> mapResponse = json.decode(setup);
+      return (mapResponse['token']);
+    }
+    var _token = await _buscarToken();
+
+    var setup = Setups();
+
+    var url = Uri.parse(setup.conexao + '/tipos_consultas');
+
+    var header = {
+      "Content-Type": "application/json",
+      "Accept-Charset": "utf-8",
+      "Authorization": "$_token"
+    };
+
+    var response = await http.get(url, headers: header);
+
+    List<String> listaHoras = [];
+
+    switch (response.statusCode) {
+      case 200:
+        String body = utf8.decode(response.bodyBytes);
+
+        var mapResponse = json.decode(body).cast<Map<String, dynamic>>();
+
+        for (var item in mapResponse) {
+          if (motivo == item['tipoConsulta']) {
+            moti.id = item['id'];
+            moti.tipoConsulta = item['tipoConsulta'];
+            Motivo.clear();
+            moti.save();
+          }
+        }
+    }
+    return moti;
+  }
 }
