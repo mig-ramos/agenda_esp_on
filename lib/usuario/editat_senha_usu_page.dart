@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:agenda_esp_on/apis/usuario_api.dart';
 import 'package:agenda_esp_on/components/alert.dart';
 import 'package:agenda_esp_on/utils/function_utils.dart';
@@ -16,15 +15,15 @@ class EditarSenhaUsuario extends StatefulWidget {
 }
 
 class _EditarSenhaUsuarioState extends State<EditarSenhaUsuario> {
-
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   TextEditingController _txtSenhaAtual = TextEditingController();
   TextEditingController _txtNovaSenha = TextEditingController();
   TextEditingController _txtRepetirSenha = TextEditingController();
   int _id = 0;
-  String _txtNome= '';
+  String _txtNome = '';
   String _txtEmail = '';
+  List<dynamic> _perfil = [];
   late DateTime _dataNascimento;
   String _senhaAtual = '';
 
@@ -110,7 +109,7 @@ class _EditarSenhaUsuarioState extends State<EditarSenhaUsuario> {
           TextFormField(
             controller: _txtNovaSenha,
             validator: (value) {
-              if(value!.isEmpty){
+              if (value!.isEmpty) {
                 return 'Informe a Nova Senha';
               }
               return null;
@@ -137,7 +136,7 @@ class _EditarSenhaUsuarioState extends State<EditarSenhaUsuario> {
           TextFormField(
             controller: _txtRepetirSenha,
             validator: (value) {
-              if(value! != _txtNovaSenha.text) {
+              if (value! != _txtNovaSenha.text) {
                 return "Diferença ao Repetir a Senha!";
               }
               return null;
@@ -168,15 +167,15 @@ class _EditarSenhaUsuarioState extends State<EditarSenhaUsuario> {
               style: _elevatedButtonOk,
               child: _progress
                   ? CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation(Colors.white),
-              )
+                      valueColor: AlwaysStoppedAnimation(Colors.white),
+                    )
                   : Text(
-                "Confirmar",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 22,
-                ),
-              ),
+                      "Confirmar",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 22,
+                      ),
+                    ),
               onPressed: () {
                 _onClickEditar(context);
               },
@@ -204,24 +203,18 @@ class _EditarSenhaUsuarioState extends State<EditarSenhaUsuario> {
     );
   }
 
-  _onClickCancelar(context) {
+  _onClickCancelar(context) async {
     Navigator.pop(context);
   }
 
   _onClickEditar(context) async {
-    print("Confirmar!");
     int id = _id;
     String nome = _txtNome;
     String email = _txtEmail;
-    DateTime dataNascimento = _dataNascimento;
+
     String senhaAtual = _txtSenhaAtual.text;
     String novaSenha = _txtNovaSenha.text;
     String repetirSenha = _txtRepetirSenha.text;
-    // if (novaSenha == repetirSenha){
-    //   senhaAtual = novaSenha;
-    // }
-
-    // print("Nome: $nome Email: $email Senha atual: $senhaAtual, Nova senha: $novaSenha, Repetir senha: $repetirSenha");
 
     if (!_formKey.currentState!.validate()) {
       return;
@@ -230,40 +223,68 @@ class _EditarSenhaUsuarioState extends State<EditarSenhaUsuario> {
     setState(() {
       _progress = true;
     });
-    // print('Aseguir o token');
-    // print(await Prefs.getString('tokenjwt'));
-    print('$senhaAtual \nDo Bnaco $_senhaAtual');
-    if(_senhaAtual != senhaAtual){
-      alert(context,'Senha Atual \nnão é a mesma!!');
-    } else if (novaSenha == repetirSenha && _senhaAtual == senhaAtual){
+    if (_senhaAtual != senhaAtual) {
+      alert(context, 'Senha Atual \nnão é a mesma!!');
+    } else if (novaSenha == repetirSenha && _senhaAtual == senhaAtual) {
       senhaAtual = novaSenha;
-      var usuario = await UsuarioApi.mudaSenhaUsu(id, senhaAtual,nome, email, dataNascimento);
-      switch(usuario.statusCode){
-        case 204:
-          Navigator.pop(context);
-          alert(context,'Senha Alterada \ncom sussesso!!');
-          break;
-        default:
-          alert(context,'Alteração de Senha \nfalhou!!');
+      if (_perfil.contains('PACIENTE')) {
+        var usuario = await UsuarioApi.mudaSenhaUsu(
+            id, senhaAtual, nome, email, _dataNascimento);
+        switch (usuario.statusCode) {
+          case 204:
+            Navigator.pop(context);
+            alert(context, 'Senha Alterada \ncom sussesso!!');
+            break;
+          default:
+            alert(context, 'Alteração de Senha \nfalhou!!');
+        }
+      } else if (_perfil.contains('MEDICO')) {
+        var usuario =
+            await UsuarioApi.mudaSenhaMedi(id, senhaAtual, nome, email);
+        switch (usuario.statusCode) {
+          case 204:
+            Navigator.pop(context);
+            alert(context, 'Senha Alterada \ncom sussesso!!');
+            break;
+          default:
+            alert(context, 'Alteração de Senha \nfalhou!!');
+        }
+      } else if (_perfil.contains('ADMIN')) {
+        var usuario =
+            await UsuarioApi.mudaSenhaAdm(id, senhaAtual, nome, email);
+        switch (usuario.statusCode) {
+          case 204:
+            Navigator.pop(context);
+            alert(context, 'Senha Alterada \ncom sussesso!!');
+            break;
+          default:
+            alert(context, 'Alteração de Senha \nfalhou!!');
+        }
       }
     } else {
-      alert(context,'Repetir senha \nnão é igual!!');
+      alert(context, 'Repetir senha \nnão é igual!!');
     }
+    setState(() {
+      _progress = false;
+    });
+  }
 
+  _recuperaDados() async {
+    Map mapResponse = json.decode(await Prefs.getString('usuario.prefs'));
+    setState(() {
+      _id = mapResponse["id"] as int;
+      _txtNome = mapResponse["nome"];
+      _txtEmail = mapResponse["email"];
+      _senhaAtual = mapResponse["senha"];
+      _txtSenhaAtual.text = '';
+      _perfil = mapResponse["perfis"];
 
-        setState(() {
-          _progress = false;
-        });
+      if (_perfil.contains('PACIENTE')) {
+        _dataNascimento = stringToDate(mapResponse["data_nascimento"]);
       }
-      _recuperaDados() async{
-        Map mapResponse = json.decode(await Prefs.getString('usuario.prefs'));
-        setState((){
-          _id = mapResponse["id"] as int;
-          _txtNome = mapResponse["nome"];
-          _txtEmail = mapResponse["email"];
-          _senhaAtual = mapResponse["senha"];
-          _txtSenhaAtual.text = '';
-          _dataNascimento = stringToDate(mapResponse["data_nascimento"]);
-        });
+      if (_perfil.contains('ADMIN') || _perfil.contains('MEDICO')) {
+        _dataNascimento = DateTime.now();
       }
+    });
+  }
 }

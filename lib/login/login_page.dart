@@ -16,10 +16,10 @@ class LoginPage extends StatefulWidget {
   _LoginPageState createState() => _LoginPageState();
 }
 
- Future<String> _buscarToken() async {
+Future<String> _buscarToken() async {
   var setup = await Prefs.getString('user.prefs');
   Map<String, dynamic> mapResponse = json.decode(setup);
- return (mapResponse['token']);
+  return (mapResponse['token']);
 }
 
 class _LoginPageState extends State<LoginPage> {
@@ -147,14 +147,20 @@ class _LoginPageState extends State<LoginPage> {
         if (_formKey.currentState!.validate()) {
           var resposta = await LoginApi.login(email, senha);
           if (resposta == 200) {
-            var token =await _buscarToken();
-                var usuario = await UsuarioApi.bucarUsuPorEmail(email, senha, token);
+            var token = await _buscarToken();
+            var usuario =
+                await UsuarioApi.bucarUsuPorEmail(email, senha, token);
             if (usuario != null) {
               var perfil = '';
-              perfil = (usuario.perfis.contains('ADMIN') ? perfil = 'ADMIN' : (usuario.perfis.contains('MEDICO') ? perfil = 'MEDICO': perfil = 'PACIENTE'));
-               switch (perfil) {
+              perfil = (usuario.perfis.contains('ADMIN')
+                  ? perfil = 'ADMIN'
+                  : (usuario.perfis.contains('MEDICO')
+                      ? perfil = 'MEDICO'
+                      : perfil = 'PACIENTE'));
+              switch (perfil) {
                 case 'PACIENTE':
-                  Navigator.of(context).pushReplacementNamed('/menuPageUsuario');
+                  Navigator.of(context)
+                      .pushReplacementNamed('/menuPageUsuario');
                   break;
                 case 'MEDICO':
                   Navigator.of(context).pushReplacementNamed('/menuPageMedico');
@@ -170,9 +176,9 @@ class _LoginPageState extends State<LoginPage> {
               alert(context, "Falha no Cadastro Usuário..");
             }
             //   Navigator.of(context).pushReplacementNamed('/menuPageUsuario');
-          } else if(resposta == 401) {
+          } else if (resposta == 401) {
             alert(context, "Login INVÁLIDO");
-          } else{
+          } else {
             alert(context, "Servidor não encontrado..");
           }
         } else {

@@ -93,7 +93,7 @@ class UsuarioApi {
       if (response.statusCode == 200) {
         usuario.save();
       }
-      Usuario.clear();
+ //     Usuario.clear();
 
       return usuario;
     } else if (_perfis.contains("ADMIN")) {
@@ -114,7 +114,7 @@ class UsuarioApi {
       if (response.statusCode == 200) {
         usuario.save();
       }
-      Usuario.clear();
+   //   Usuario.clear();
 
       return usuario;
     }
@@ -248,8 +248,7 @@ class UsuarioApi {
       "senha": _senha_c,
       "data_nascimento": _data_nascimento
     };
-
-    //print("Parametros: $params");
+    
     var _body = utf8.encode(json.encode(params));
 
     var response =
@@ -272,5 +271,110 @@ class UsuarioApi {
         "/" +
         dataNascimento.year.toString();
     return _stringdate;
+  }
+
+  static Future<http.Response> mudaSenhaMedi(int id, String senha, String nome, String email) async {
+    DBCrypt dBCrypt = DBCrypt();
+    String senha_h = dBCrypt.hashpw(senha, dBCrypt.gensalt());
+    String salt = dBCrypt.gensaltWithRounds(10);
+    senha_h = dBCrypt.hashpw(senha, salt);
+    int _id = id;
+    String _nome = nome;
+    String _email = email;
+    String _senha = senha;
+    String _senha_c = senha_h;
+    var setup = Setups();
+
+    Future<String> _buscarToken() async {
+      var setup = await Prefs.getString('user.prefs');
+      Map<String, dynamic> mapResponse = json.decode(setup);
+      return (mapResponse['token']);
+    }
+
+    var _token = await _buscarToken();
+
+    var url = '';
+
+    url = setup.conexao + '/medicos/$_id';
+
+    var header_t = {
+      "Content-Type": "application/json",
+      "Accept-Charset": "utf-8",
+      "Authorization": "$_token"
+    };
+
+    Map params;
+
+    params = {
+      "nome": _nome,
+      "email": _email,
+      "senha": _senha_c,
+    };
+
+    var _body = utf8.encode(json.encode(params));
+
+    var response =
+        await http.put(Uri.parse(url), headers: header_t, body: _body);
+
+    switch (response.statusCode) {
+      case 204:
+      // Se foi alterado com sussesso - atualiza a tela de edição.
+        await UsuarioApi.bucarUsuPorEmail(_email, _senha, _token);
+        break;
+    }
+    return response;
+  }
+
+  static Future<http.Response> mudaSenhaAdm(int id, String senha, String nome, String email) async {
+
+    DBCrypt dBCrypt = DBCrypt();
+    String senha_h = dBCrypt.hashpw(senha, dBCrypt.gensalt());
+    String salt = dBCrypt.gensaltWithRounds(10);
+    senha_h = dBCrypt.hashpw(senha, salt);
+    int _id = id;
+    String _nome = nome;
+    String _email = email;
+    String _senha = senha;
+    String _senha_c = senha_h;
+    var setup = Setups();
+
+    Future<String> _buscarToken() async {
+      var setup = await Prefs.getString('user.prefs');
+      Map<String, dynamic> mapResponse = json.decode(setup);
+      return (mapResponse['token']);
+    }
+
+    var _token = await _buscarToken();
+
+    var url = '';
+
+    url = setup.conexao + '/usuarios/$_id';
+
+    var header_t = {
+      "Content-Type": "application/json",
+      "Accept-Charset": "utf-8",
+      "Authorization": "$_token"
+    };
+
+    Map params;
+
+    params = {
+      "nome": _nome,
+      "email": _email,
+      "senha": _senha_c,
+    };
+    
+    var _body = utf8.encode(json.encode(params));
+
+    var response =
+        await http.put(Uri.parse(url), headers: header_t, body: _body);
+
+    switch (response.statusCode) {
+      case 204:
+      // Se foi alterado com sussesso - atualiza a tela de edição.
+        await UsuarioApi.bucarUsuPorEmail(_email, _senha, _token);
+        break;
+    }
+    return response;
   }
 }

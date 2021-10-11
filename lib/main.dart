@@ -1,9 +1,8 @@
 import 'package:agenda_esp_on/usuario/editar_usuario_page.dart';
-import 'package:agenda_esp_on/usuario/editat_senha_page.dart';
+import 'package:agenda_esp_on/usuario/editat_senha_usu_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-
 import 'agenda/cad_agenda_page.dart';
 import 'home/home_page.dart';
 import 'login/cad_user_page.dart';
@@ -27,7 +26,7 @@ class AgendaEspOn extends StatelessWidget {
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-      supportedLocales:[
+      supportedLocales: [
         const Locale('pt'),
       ],
       theme: ThemeData(
@@ -37,10 +36,9 @@ class AgendaEspOn extends StatelessWidget {
       routes: {
         '/': (context) => HomePage(title: 'Ephemeris'),
         '/loginPage': (context) => LoginPage(title: 'Fazer Login'),
-        '/cadUserPage': (context) =>
-            CadUserPage(title: 'Cadastrar Usuário'),
+        '/cadUserPage': (context) => CadUserPage(title: 'Cadastrar Usuário'),
         '/menuPageUsuario': (context) => MenuPageUsuario(title: 'Ephemeris'),
-       '/menuPageMedico': (context) => MenuPageMedico(title: 'Ephemeris'),
+        '/menuPageMedico': (context) => MenuPageMedico(title: 'Ephemeris'),
         '/menuPageAdmin': (context) => MenuPageAdmin(title: 'Ephemeris'),
         '/editaUsuarioPage': (context) =>
             EditarUsuarioPage(title: 'Editar Perfil Usuário'),

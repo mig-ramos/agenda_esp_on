@@ -138,21 +138,21 @@ class NavigationDrawerAdmin extends StatelessWidget {
 
     switch (index) {
       case 0:
-      //     Navigator.of(context).pushNamed('/cadAgendaPage');
+        //     Navigator.of(context).pushNamed('/cadAgendaPage');
         break;
       case 1:
-      //      Navigator.of(context).pushNamed('/editaUsuarioPage');
+        //      Navigator.of(context).pushNamed('/editaUsuarioPage');
         break;
       case 2:
-      //    Navigator.of(context).pushNamed('/editarSenhaUsuarioPage');
+        //    Navigator.of(context).pushNamed('/editarSenhaUsuarioPage');
         break;
       case 3:
         Navigator.of(context).pushNamed('/editarSenhaUsuarioPage');
         break;
       case 4:
-      //  Navigator.of(context).pushNamed('/idAgenda');
-      //     Navigator.of(context).push(MaterialPageRoute(builder: (contex) {
-      //   return IdAgenda(title: 'AgendaEspOn', agenda: AgendaApi().getAgendaId());}),
+        //  Navigator.of(context).pushNamed('/idAgenda');
+        //     Navigator.of(context).push(MaterialPageRoute(builder: (contex) {
+        //   return IdAgenda(title: 'AgendaEspOn', agenda: AgendaApi().getAgendaId());}),
         break;
       case 5:
         Navigator.pop(context);
