@@ -118,4 +118,30 @@ class EspecialidadeApi {
 
     return dropEspecialidades;
   }
+
+  static Future<int> delEspecialidade(id) async {
+    final _id = id;
+
+    Future<String> _buscarToken() async {
+      var setup = await Prefs.getString('user.prefs');
+      Map<String, dynamic> mapResponse = json.decode(setup);
+      return (mapResponse['token']);
+    }
+    var _token = await _buscarToken();
+
+    var setup = Setups();
+
+    var url = Uri.parse(setup.conexao +"/especialidades/+$_id");
+
+    var header = {
+      "Content-Type": "application/json",
+      "Accept-Charset": "utf-8",
+      "Authorization": "$_token"
+    };
+
+    var response = await http.delete(url, headers: header);
+
+    return response.statusCode;
+  }
+
 }

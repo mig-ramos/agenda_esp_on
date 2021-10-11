@@ -91,7 +91,8 @@ class _MenuPageUsuarioState extends State<MenuPageUsuario> {
            Navigator.of(context).pushNamed('/cadAgendaPage');
           },
         ),
-        drawer: NavigationDrawerUsuario());
+        drawer: NavigationDrawerUsuario()
+    );
   }
 
   _deletarAgendamento(context, comp) {
