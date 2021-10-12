@@ -147,7 +147,7 @@ class _CadAgendaPageState extends State<CadAgendaPage> {
                   _dropMedicoValue = 'Buscar..';
                   EspecialidadeApi.dropEspecialidades(
                       _dropEspecialidadeValue);
-                  _recuperaMedico(); // AQUI ESOLHE OS MEDICOS
+                   _recuperaMedico(_dropEspecialidadeValue); // AQUI ESOLHE OS MEDICOS
                 });
               },
               items:
@@ -367,10 +367,8 @@ class _CadAgendaPageState extends State<CadAgendaPage> {
   }
 
   _onClickCadastrar(context) async {
-    // String medico = _dropMedicoValue;
+
     DateTime dataAgenda = currentDate;
-    // String hora = _dropHoraValue;
-    // String tipoConsulta = _dropTipoConsultaValue;
 
     /// =====================================================
     /// Captura dos IDs para Agendamentos
@@ -399,7 +397,6 @@ class _CadAgendaPageState extends State<CadAgendaPage> {
     } else if (_dropTipoConsultaValue == 'Buscar..') {
       alert(context, 'Qual o Motivo?');
     } else {
-
       var response = await AgendaApi.salvaAgenda(
           DateFormat("yyyy-MM-dd").format(dataAgenda),
           _idEspe,
@@ -409,12 +406,17 @@ class _CadAgendaPageState extends State<CadAgendaPage> {
       switch (response) {
         case 204:
           Navigator.pop(context);
-          alert(context, 'Alterado com sussesso!');
+          alert(context, 'Alterado com sucesso!');
           break;
         case 201:
           Navigator.pop(context);
           alert(context,
-              'Agendado com sussesso!\nClick no Botão Atualizar\ncanto superior direito.');
+              'Agendado com sucesso!\nClick no Botão Atualizar\ncanto superior direito.');
+          break;
+        case 403:
+          Navigator.pop(context);
+          alert(context,
+              'Assinatura de conexão vencida!\nFaça Login Novamente..');
           break;
         case 500:
           Navigator.pop(context);
@@ -448,25 +450,15 @@ class _CadAgendaPageState extends State<CadAgendaPage> {
   _recuperaDados() async {
     String nome = '';
     var lista = await EspecialidadeApi.dropEspecialidades(nome);
-    // Teste de subtração de hora medico
-    //  if (_dropMedicoValue != 'Buscar..'){
-    //    List<String> horas = [];
-    //    horas = await AgendaApi.getHorasAgendamentos(_dropMedicoValue,DateFormat("yyyy-MM-dd").format(currentDate) );
-    //    setState(() {
-    //      _listaHoras = horas;
-    //    });
-    //  }
     setState(() {
       _listaEspecial = lista!;
     });
   }
 
-  _recuperaMedico() async {
-    var listEsp = await Especial.get(); // Id da ESPECIALIDADE
-    int _idEspe = listEsp!.id;
-    var lista = await MedicoApi.dropMedicos(_idEspe);
+  _recuperaMedico(String dropEspecialidadeValue) async {
+    var lista = await MedicoApi.dropMedicosPorEspe(dropEspecialidadeValue);
     setState(() {
-      _listaMedicos = lista!;
+     _listaMedicos = lista!;
     });
   }
 

@@ -233,7 +233,7 @@ class _EditarSenhaUsuarioState extends State<EditarSenhaUsuario> {
         switch (usuario.statusCode) {
           case 204:
             Navigator.pop(context);
-            alert(context, 'Senha Alterada \ncom sussesso!!');
+            alert(context, 'Senha Alterada \ncom sucesso!!');
             break;
           default:
             alert(context, 'Alteração de Senha \nfalhou!!');
@@ -244,7 +244,7 @@ class _EditarSenhaUsuarioState extends State<EditarSenhaUsuario> {
         switch (usuario.statusCode) {
           case 204:
             Navigator.pop(context);
-            alert(context, 'Senha Alterada \ncom sussesso!!');
+            alert(context, 'Senha Alterada \ncom sucesso!!');
             break;
           default:
             alert(context, 'Alteração de Senha \nfalhou!!');
@@ -255,7 +255,7 @@ class _EditarSenhaUsuarioState extends State<EditarSenhaUsuario> {
         switch (usuario.statusCode) {
           case 204:
             Navigator.pop(context);
-            alert(context, 'Senha Alterada \ncom sussesso!!');
+            alert(context, 'Senha Alterada \ncom sucesso!!');
             break;
           default:
             alert(context, 'Alteração de Senha \nfalhou!!');

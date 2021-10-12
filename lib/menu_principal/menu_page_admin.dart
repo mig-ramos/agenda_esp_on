@@ -1,7 +1,7 @@
 import 'package:agenda_esp_on/apis/especialidade_api.dart';
 import 'package:agenda_esp_on/components/alert.dart';
 import 'package:agenda_esp_on/components/navigation_drawer_admin.dart';
-import 'package:agenda_esp_on/models/especialidade.dart';
+import 'package:agenda_esp_on/models/especialidade_lista.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -16,12 +16,12 @@ class MenuPageAdmin extends StatefulWidget {
 
 class _MenuPageAdminState extends State<MenuPageAdmin> {
 
-  late Future<List<Especialidade>> _especialidade;
+  late Future<List<EspecialidadeLista>> _especialidade;
 
   @override
   initState() {
     super.initState();
-    _especialidade = EspecialidadeApi.listaEspecialidades();
+    _especialidade = EspecialidadeApi.listEspecialidades();
   }
 
   @override
@@ -36,7 +36,7 @@ class _MenuPageAdminState extends State<MenuPageAdmin> {
             icon: Icon(Icons.refresh,color: Colors.white,),
             onPressed: () {
               setState(() {
-                _especialidade = EspecialidadeApi.listaEspecialidades();
+                _especialidade = EspecialidadeApi.listEspecialidades();
               });
             },
           ),
@@ -46,12 +46,12 @@ class _MenuPageAdminState extends State<MenuPageAdmin> {
         future: _especialidade,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            print(snapshot.data);
+         //   print(snapshot.data);
             return ListView(
               children: _listEspecialidades(snapshot.data),
             );
           } else if (snapshot.hasError) {
-            print(snapshot.error);
+         //   print(snapshot.error);
             return Center(
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -158,7 +158,7 @@ class _MenuPageAdminState extends State<MenuPageAdmin> {
     if (response == 204) {
       setState(() {
         alert(context, 'Ok. Solicitação atendida \nDeletado o agendamento.');
-        _especialidade = EspecialidadeApi.listaEspecialidades();
+        _especialidade = EspecialidadeApi.listEspecialidades();
       });
     } else if (response == 400){
       alert(context, ':-(  Solicitação não atendida \n      Especialidade em uso.');

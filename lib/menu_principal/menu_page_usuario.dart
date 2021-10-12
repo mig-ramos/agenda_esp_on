@@ -44,7 +44,7 @@ class _MenuPageUsuarioState extends State<MenuPageUsuario> {
          future: _agendamento,
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              print(snapshot.data);
+            //  print(snapshot.data);
               return ListView(
                 children: _listCompromissos(snapshot.data),
               );
@@ -116,7 +116,7 @@ class _MenuPageUsuarioState extends State<MenuPageUsuario> {
                 child: Text('Cancelar')),
             TextButton(
                 onPressed: () {
-                  print(comp.especial);
+                //  print(comp.especial);
                   this.setState(() {
                     this._deleteAgenda(comp.id);
                     Navigator.pop(context);
@@ -175,7 +175,7 @@ class _MenuPageUsuarioState extends State<MenuPageUsuario> {
   }
 
   _deleteAgenda(id) async {
-    print(id);
+  //  print(id);
     int response = await AgendaApi.delAgenda(id);
     if (response == 204) {
       setState(() {

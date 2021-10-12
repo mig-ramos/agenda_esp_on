@@ -1,21 +1,17 @@
 import 'package:agenda_esp_on/utils/prefs.dart';
 import 'dart:convert' as convert;
 
-class Especialidade {
+class EspecialidadeLista {
   late int id;
   late String nome;
   late String descricao;
-  late List<dynamic> medicos;
 
-  Especialidade(
-      {required this.id, required this.nome, required this.descricao});
+  EspecialidadeLista({required this.id, required this.nome, required this.descricao});
 
-  Especialidade.fromJson(Map<String, dynamic> json) {
+  EspecialidadeLista.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     nome = json['nome'];
     descricao = json['descricao'];
-    medicos = json['medicos'];
-    List<String> drop = [];
   }
 
   Map<String, dynamic> toJson() {
@@ -23,12 +19,11 @@ class Especialidade {
     data['id'] = this.id;
     data['nome'] = this.nome;
     data['descricao'] = this.descricao;
-    data['medicos'] = this.medicos;
     return data;
   }
 
   static void clear() {
-    Prefs.setString("especialidade.prefs", "");
+    Prefs.setString("especialidadeLista.prefs", "");
   }
 
   void save() {
@@ -36,21 +31,21 @@ class Especialidade {
 
     String json = convert.json.encode(map);
 
-    Prefs.setString("especialidade.prefs", json);
+    Prefs.setString("especialidadeLista.prefs", json);
   }
 
-  static Future<Especialidade?> get() async {
-    String json = await Prefs.getString("especialidade.prefs");
+  static Future<EspecialidadeLista?> get() async {
+    String json = await Prefs.getString("especialidadeLista.prefs");
     if (json.isEmpty) {
       return null;
     }
     Map<String, String> map = convert.json.decode(json);
-    Especialidade especialidade = Especialidade.fromJson(map);
-    return especialidade;
+    EspecialidadeLista especialidadeLista = EspecialidadeLista.fromJson(map);
+    return especialidadeLista;
   }
 
   @override
   String toString() {
-    return 'Especialidade{id: $id, nome: $nome, descricao: $descricao, medicos: $medicos}';
+   return 'EspecialidadeLista{id: $id, nome: $nome, descricao: $descricao}';
   }
 }

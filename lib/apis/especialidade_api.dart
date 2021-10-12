@@ -1,9 +1,12 @@
 import 'dart:convert';
 import 'package:agenda_esp_on/models/especialidade_aux.dart';
+import 'package:agenda_esp_on/models/especialidade_lista.dart';
 import 'package:http/http.dart' as http;
 import 'package:agenda_esp_on/configurations/setup.dart';
 import 'package:agenda_esp_on/models/especialidade.dart';
 import 'package:agenda_esp_on/utils/prefs.dart';
+
+import 'medico_api.dart';
 
 class EspecialidadeApi {
   static Future<List<Especialidade>> listaEspecialidades() async {
@@ -38,9 +41,9 @@ class EspecialidadeApi {
     switch (status) {
       case 200:
         String body = utf8.decode(response.bodyBytes);
-        print(body);
+        //      print(body);
         final jsonData = jsonDecode(body).cast<Map<String, dynamic>>();
-        print(jsonData);
+        //       print(jsonData);
 
         for (var item in jsonData) {
           esps.add(Especialidade(
@@ -48,11 +51,11 @@ class EspecialidadeApi {
               nome: item['nome'],
               descricao: item['descricao']));
           dropEspecialidades.add(EspecialidadeAux(nome: item['nome']));
-          print(item['nome']);
+          //      print(item['nome']);
         }
         final dropEsp = dropEspecialidades;
         EspecialidadeAux.clear();
-        print('Printando a lista: $dropEsp');
+        //    print('Printando a lista: $dropEsp');
         break;
       case 403:
         print('Conexão encerrada.. Entre novamente');
@@ -64,10 +67,53 @@ class EspecialidadeApi {
     return esps;
   }
 
+  static Future<List<EspecialidadeLista>> listEspecialidades() async {
+    Future<String> _buscarToken() async {
+      var setup = await Prefs.getString('user.prefs');
+      Map<String, dynamic> mapResponse = json.decode(setup);
+      return (mapResponse['token']);
+    }
+
+    var _token = await _buscarToken();
+    var setup = Setups();
+    var url = Uri.parse(setup.conexao + '/especialidades');
+
+    var header = {
+      "Content-Type": "application/json",
+      "Accept-Charset": "utf-8",
+      "Authorization": "$_token"
+    };
+
+    var response = await http.get(url, headers: header);
+
+    List<EspecialidadeLista> listaEspe = [];
+
+    int status = response.statusCode;
+
+    switch (status) {
+      case 200:
+        String body = utf8.decode(response.bodyBytes);
+        final jsonData = jsonDecode(body).cast<Map<String, dynamic>>();
+        for (var item in jsonData) {
+          listaEspe.add(EspecialidadeLista(
+              id: item['id'],
+              nome: item['nome'],
+              descricao: item['descricao']));
+        }
+        break;
+      case 403:
+        print('Conexão encerrada.. Entre novamente');
+        break;
+      default:
+        throw Exception('Falha na conexão');
+    }
+    return listaEspe;
+  }
+
   static Future<List<String>?> dropEspecialidades(String nome) async {
     int id = 0;
     Especial espe = Especial(id, nome);
-
+    // Especial.clear();
     List<String> dropEspecialidades = [];
     dropEspecialidades = ['Buscar..'];
 
@@ -97,13 +143,16 @@ class EspecialidadeApi {
       case 200:
         String body = utf8.decode(response.bodyBytes);
         final jsonData = jsonDecode(body).cast<Map<String, dynamic>>();
-
+        Especial.clear();
         for (var item in jsonData) {
           dropEspecialidades.add((item['nome']));
-          if (nome == item['nome']){
+          if (nome == item['nome']) {
             espe.id = item['id'];
             espe.nome = item['nome'];
-            Especial.clear();
+            // Especial.clear();
+        //    Prefs.setInt('idMedi', item['id']);
+       //     print('O ID: ${item['id']} O NOME:${item['nome']}');
+        //    await MedicoApi.dropMedicos(item['id']);
             espe.save();
           }
         }
@@ -127,11 +176,12 @@ class EspecialidadeApi {
       Map<String, dynamic> mapResponse = json.decode(setup);
       return (mapResponse['token']);
     }
+
     var _token = await _buscarToken();
 
     var setup = Setups();
 
-    var url = Uri.parse(setup.conexao +"/especialidades/+$_id");
+    var url = Uri.parse(setup.conexao + "/especialidades/+$_id");
 
     var header = {
       "Content-Type": "application/json",
@@ -143,5 +193,4 @@ class EspecialidadeApi {
 
     return response.statusCode;
   }
-
 }

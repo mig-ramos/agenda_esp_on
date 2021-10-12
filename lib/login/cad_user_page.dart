@@ -267,11 +267,11 @@ class _CadUserPageState extends State<CadUserPage> {
     switch (usuario.statusCode) {
       case 200:
         Navigator.pop(context);
-        alert(context, 'Usuário Alterado \ncom sussesso!!');
+        alert(context, 'Usuário Alterado \ncom sucesso!!');
         break;
       case 201:
         Navigator.pop(context);
-        alert(context, 'Usuário Cadastrado \ncom sussesso!!');
+        alert(context, 'Usuário Cadastrado \ncom sucesso!!');
         break;
       case 500:
         alert(context, 'Email: $email \njá Cadastrado..');

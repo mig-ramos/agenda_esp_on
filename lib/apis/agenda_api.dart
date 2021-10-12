@@ -215,18 +215,13 @@ class AgendaApi {
         "observacao": _obs,
       };
     }
-
-    print("Parametros: $params");
-
+//    print("Parametros: $params");
     var _body = json.encode(params);
-    print("json a ser enviado: $_body");
-
+//    print("json a ser enviado: $_body");
     var response = await (_id == 0
         ? http.post(Uri.parse(url), headers: header, body: _body)
         : http.put(Uri.parse(url), headers: header, body: _body));
-
-    print('Response status: ${response.statusCode}');
-
+ //   print('Response status: ${response.statusCode}');
     return response.statusCode;
   }
 }
