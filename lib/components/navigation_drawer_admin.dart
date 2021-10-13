@@ -141,10 +141,10 @@ class NavigationDrawerAdmin extends StatelessWidget {
         //     Navigator.of(context).pushNamed('/cadAgendaPage');
         break;
       case 1:
-        //      Navigator.of(context).pushNamed('/editaUsuarioPage');
+        // Navigator.of(context).pushNamed('/listaUsuPage');
         break;
       case 2:
-        //    Navigator.of(context).pushNamed('/editarSenhaUsuarioPage');
+        Navigator.of(context).pushNamed('/listaUsuPage');
         break;
       case 3:
         Navigator.of(context).pushNamed('/editarSenhaUsuarioPage');

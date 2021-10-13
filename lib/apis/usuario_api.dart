@@ -1,5 +1,6 @@
 import 'package:agenda_esp_on/configurations/setup.dart';
 import 'package:agenda_esp_on/models/usuario.dart';
+import 'package:agenda_esp_on/models/usuario_lista.dart';
 import 'package:agenda_esp_on/utils/prefs.dart';
 import 'package:dbcrypt/dbcrypt.dart';
 import 'package:http/http.dart' as http;
@@ -376,5 +377,80 @@ class UsuarioApi {
         break;
     }
     return response;
+  }
+
+  static Future<List<UsuarioLista>> listaUsuarios() async {
+    Future<String> _buscarToken() async {
+      var setup = await Prefs.getString('user.prefs');
+      Map<String, dynamic> mapResponse = json.decode(setup);
+      return (mapResponse['token']);
+    }
+
+    var _token = await _buscarToken();
+    var setup = Setups();
+    var url = Uri.parse(setup.conexao + '/usuarios/page?linesPerPage=20&page=0&orderBy=nome&direction=ASC');
+
+    var header = {
+      "Content-Type": "application/json",
+      "Accept-Charset": "utf-8",
+      "Authorization": "$_token"
+    };
+
+    final response = await http.get(url, headers: header);
+
+    List<UsuarioLista> listaUsu = [];
+
+    switch (response.statusCode) {
+      case 200:
+        String body = utf8.decode(response.bodyBytes);
+        final jsonData = jsonDecode(body);
+        for (var item in jsonData['content']) {
+          listaUsu.add(UsuarioLista(
+              id: item['id'],
+              nome: item['nome'],
+              email: item['email'],
+              senha: item['senha'])
+             );
+        }
+        break;
+      case 403:
+        print('Conexão encerrada.. Entre novamente');
+        break;
+      default:
+        throw Exception('Falha na conexão');
+    }
+    print(listaUsu);
+    return listaUsu;
+
+  }
+
+  static Future<int> delUsuario(id) async {
+    final _id = id;
+
+    Future<String> _buscarToken() async {
+      var setup = await Prefs.getString('user.prefs');
+      Map<String, dynamic> mapResponse = json.decode(setup);
+      return (mapResponse['token']);
+    }
+    var _token = await _buscarToken();
+    var setup = Setups();
+
+    var url = Uri.parse(setup.conexao +"/usuarios/+$_id");
+
+    var header = {
+      "Content-Type": "application/json",
+      "Accept-Charset": "utf-8",
+      "Authorization": "$_token"
+    };
+
+    var perfil = await Usuario.get();
+
+    if (perfil!.perfis.contains('ADMIN') && _id == 1){
+      return 403;
+    } else {
+      var response = await http.delete(url, headers: header);
+      print(response.statusCode);
+      return response.statusCode;
+    }
   }
 }
