@@ -1,5 +1,4 @@
 import 'dart:convert' as convert;
-
 import 'package:agenda_esp_on/utils/prefs.dart';
 
 class Medico {
@@ -10,7 +9,6 @@ class Medico {
   late bool ativo;
   late List<String> perfil;
   late String nome;
-  late String dataNascimento;
   late String crm;
   late String dataInscricao;
   late int especialidadeId;
@@ -23,7 +21,6 @@ class Medico {
         required this.ativo,
         required this.perfil,
         required this.nome,
-        required this.dataNascimento,
         required this.crm,
         required this.dataInscricao,
         required this.especialidadeId, id});
@@ -36,7 +33,6 @@ class Medico {
     ativo = json['ativo'];
     perfil = json['perfil'] != null ? json['perfil'].cast<String>() : null;
     nome = json['nome'];
-    dataNascimento = json['data_nascimento'];
     crm = json['crm'];
     dataInscricao = json['data_inscricao'];
     especialidadeId = json['especialidade_id'];
@@ -51,7 +47,6 @@ class Medico {
     data['ativo'] = this.ativo;
     data['perfis'] = this.perfil;
     data['nome'] = this.nome;
-    data['data_nascimento'] = this.dataNascimento;
     data['crm'] = this.crm;
     data['data_inscricao'] = this.dataInscricao;
     data['especialidade_id'] = this.especialidadeId;
@@ -82,6 +77,6 @@ class Medico {
 
   @override
   String toString() {
-    return 'Medico{email: $email, senha: $senha, codigo: $codigo, instante: $instante, ativo: $ativo, perfil: $perfil, nome: $nome, dataNascimento: $dataNascimento, crm: $crm, dataInscricao: $dataInscricao, especialidadeId: $especialidadeId}';
+    return 'Medico{email: $email, senha: $senha, codigo: $codigo, instante: $instante, ativo: $ativo, perfil: $perfil, nome: $nome, crm: $crm, dataInscricao: $dataInscricao, especialidadeId: $especialidadeId}';
   }
 }

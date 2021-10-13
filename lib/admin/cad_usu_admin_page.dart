@@ -6,15 +6,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/intl.dart';
 
-class CadUserPage extends StatefulWidget {
-  const CadUserPage({Key? key, required this.title}) : super(key: key);
+class CadUsuAdminPage extends StatefulWidget {
+  const CadUsuAdminPage({Key? key, required this.title}) : super(key: key);
   final String title;
 
   @override
-  _CadUserPageState createState() => _CadUserPageState();
+  _CadUsuAdminPageState createState() => _CadUsuAdminPageState();
 }
 
-class _CadUserPageState extends State<CadUserPage> {
+class _CadUsuAdminPageState extends State<CadUsuAdminPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   TextEditingController _txtNome = TextEditingController();
   TextEditingController _txtEmail = TextEditingController();
@@ -243,13 +243,14 @@ class _CadUserPageState extends State<CadUserPage> {
   }
 
   _onClickCadastrar(context) async {
-  //  print("Cadastrar!");
     int id = 0;
     String nome = (_txtNome.text).capitalizeFirstofEach;
     String email = _txtEmail.text;
     String senha = _txtSenha.text;
     DateTime dataNascimento = currentDate;
-    // print("Id $id, Nome $nome, Email $email, Senha $senha, Data nascimento: $dataNascimento");
+
+    print("Id $id, Nome $nome, Email $email, Senha $senha, Data nascimento: $dataNascimento");
+
     if (!_formKey.currentState!.validate()) {
       return;
     }

@@ -35,21 +35,27 @@ class NavigationDrawerAdmin extends StatelessWidget {
                   ),
                   SizedBox(height: 16),
                   buildMenuItem(
-                    text: 'Cadastrar Usuários',
+                    text: 'Cadastrar Usuário',
                     icon: Icons.people,
                     onCliked: () => selectedItem(context, 1),
                   ),
                   SizedBox(height: 16),
                   buildMenuItem(
+                    text: 'Cadastrar Médico',
+                    icon: Icons.people,
+                    onCliked: () => selectedItem(context, 2),
+                  ),
+                  SizedBox(height: 16),
+                  buildMenuItem(
                     text: 'Listar Usuários',
                     icon: Icons.assignment,
-                    onCliked: () => selectedItem(context, 2),
+                    onCliked: () => selectedItem(context, 3),
                   ),
                   SizedBox(height: 16),
                   buildMenuItem(
                     text: 'Editar Senha',
                     icon: Icons.vpn_key_outlined,
-                    onCliked: () => selectedItem(context, 3),
+                    onCliked: () => selectedItem(context, 4),
                   ),
                   SizedBox(height: 16),
                   Divider(color: Colors.white70),
@@ -57,13 +63,13 @@ class NavigationDrawerAdmin extends StatelessWidget {
                   buildMenuItem(
                     text: 'Ajuda',
                     icon: Icons.help,
-                    onCliked: () => selectedItem(context, 4),
+                    onCliked: () => selectedItem(context, 5),
                   ),
                   SizedBox(height: 16),
                   buildMenuItem(
                     text: 'Logout',
                     icon: Icons.exit_to_app,
-                    onCliked: () => selectedItem(context, 5),
+                    onCliked: () => selectedItem(context, 6),
                   ),
                 ],
               ),
@@ -141,20 +147,23 @@ class NavigationDrawerAdmin extends StatelessWidget {
         //     Navigator.of(context).pushNamed('/cadAgendaPage');
         break;
       case 1:
-        // Navigator.of(context).pushNamed('/listaUsuPage');
+         Navigator.of(context).pushNamed('/cadUsuAdminPage');
         break;
       case 2:
-        Navigator.of(context).pushNamed('/listaUsuPage');
+        Navigator.of(context).pushNamed('/cadUsuAdminPage');
         break;
       case 3:
-        Navigator.of(context).pushNamed('/editarSenhaUsuarioPage');
+        Navigator.of(context).pushNamed('/listaUsuPage');
         break;
       case 4:
+        Navigator.of(context).pushNamed('/editarSenhaUsuarioPage');
+        break;
+      case 5:
         //  Navigator.of(context).pushNamed('/idAgenda');
         //     Navigator.of(context).push(MaterialPageRoute(builder: (contex) {
         //   return IdAgenda(title: 'AgendaEspOn', agenda: AgendaApi().getAgendaId());}),
         break;
-      case 5:
+      case 6:
         Navigator.pop(context);
         break;
     }
