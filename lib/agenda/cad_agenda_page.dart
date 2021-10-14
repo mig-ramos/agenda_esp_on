@@ -397,7 +397,7 @@ class _CadAgendaPageState extends State<CadAgendaPage> {
     } else if (_dropTipoConsultaValue == 'Buscar..') {
       alert(context, 'Qual o Motivo?');
     } else {
-      var response = await AgendaApi.salvaAgenda(
+      var response = await AgendaApi.salvaAgenda(0,
           DateFormat("yyyy-MM-dd").format(dataAgenda),
           _idEspe,
           _idMotivo,

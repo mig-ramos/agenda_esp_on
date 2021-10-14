@@ -7,8 +7,7 @@ import 'package:agenda_esp_on/models/agendamentos.dart';
 import 'hora_api.dart';
 
 class AgendaApi {
-
-  static Future<List<Agendamentos>> getAgenda() async {
+  static Future<List<Agendamentos>> getAgendaPaciente() async {
     Future<String> _buscarToken() async {
       var setup = await Prefs.getString('user.prefs');
       Map<String, dynamic> mapResponse = json.decode(setup);
@@ -30,31 +29,34 @@ class AgendaApi {
     final response = await http.get(url, headers: header);
 
     List<Agendamentos> agendamentos = [];
-  //  print(response.statusCode);
+    //  print(response.statusCode);
     switch (response.statusCode) {
       case 200:
         String body = utf8.decode(response.bodyBytes);
         final mapResponse = jsonDecode(body);
-     //   print(mapResponse['content'][0]['medico']['nome']);
+        //   print(mapResponse['content'][0]['medico']['nome']);
         for (var item in mapResponse['content']) {
-     //     print(item['especialidade']['nome']);
+          //     print(item['especialidade']['nome']);
           agendamentos.add(Agendamentos(
               item['id'].toString(),
               item['especialidade']['nome'],
               item['medico']['nome'],
+              item['usuario']['nome'],
               item['dataDisponivel'],
               item['hora']['hora'],
-              item['tipoConsulta']['tipoConsulta']));
+              item['tipoConsulta']['tipoConsulta'],
+              item['ultimaAlteracao'],
+              item['observacao']));
         }
-         return agendamentos;
-       break;
+        return agendamentos;
+        break;
       case 201:
         return agendamentos;
         break;
       default:
         throw Exception('Conexão falhou :(');
     }
- //   return agendamentos;
+    //   return agendamentos;
   }
 
   static Future<List<Agendamentos>> getAgendaHora() async {
@@ -91,9 +93,12 @@ class AgendaApi {
               item['id'].toString(),
               item['especialidade']['nome'],
               item['medico']['nome'],
+              item['usuario']['nome'],
               item['dataDisponivel'],
               item['hora']['hora'],
-              item['tipoConsulta']['tipoConsulta']));
+              item['tipoConsulta']['tipoConsulta'],
+              item['ultimaAlteracao'],
+              item['observacao']));
         }
         return agendamentos;
         break;
@@ -114,11 +119,12 @@ class AgendaApi {
       Map<String, dynamic> mapResponse = json.decode(setup);
       return (mapResponse['token']);
     }
+
     var _token = await _buscarToken();
 
     var setup = Setups();
 
-   var url = Uri.parse(setup.conexao +"/agendamentos/+$_id");
+    var url = Uri.parse(setup.conexao + "/agendamentos/+$_id");
 
     var header = {
       "Content-Type": "application/json",
@@ -151,10 +157,10 @@ class AgendaApi {
     return dropHoras;
   }
 
-  static Future<int> salvaAgenda(String dataDisponivel, int idEspe, int idTipo, int idMedi, int idHora) async {
+  static Future<int> salvaAgenda(int id, String dataDisponivel, int idEspe, int idTipo,
+      int idMedi, int idHora) async {
 
-    int _id = 0;
-
+    int _id = id;
     int _idEspe = idEspe;
     int _idMedi = idMedi;
     String _data = dataDisponivel;
@@ -174,16 +180,17 @@ class AgendaApi {
       Map<String, dynamic> mapResponse = json.decode(setup);
       return (mapResponse['token']);
     }
+
     var _token = await _buscarToken();
 
     var setup = Setups();
 
     var url = '';
 
-    if (_id == 0){
-      url = setup.conexao+'/agendamentos';
+    if (_id == 0) {
+      url = setup.conexao + '/agendamentos';
     } else {
-      url = setup.conexao+'/agendamentos/'+_id;
+      url = setup.conexao + '/agendamentos/' + _id;
     }
 
     var header = {
@@ -195,8 +202,8 @@ class AgendaApi {
     Map params;
     if (_id == 0) {
       params = {
-        "especialidade": {'id':_idEspe},
-        "medico": {'id':_idMedi},
+        "especialidade": {'id': _idEspe},
+        "medico": {'id': _idMedi},
         "dataDisponivel": _data,
         "hora": {'id': _idHr},
         "tipoConsulta": {'id': _idCons},
@@ -206,8 +213,8 @@ class AgendaApi {
     } else {
       params = {
         "id": _id,
-        "especialidade": {'id':_idEspe},
-        "medico": {'id':_idMedi},
+        "especialidade": {'id': _idEspe},
+        "medico": {'id': _idMedi},
         "dataDisponivel": _data,
         "hora": {'id': _idHr},
         "tipoConsulta": {'id': _idCons},
@@ -221,7 +228,61 @@ class AgendaApi {
     var response = await (_id == 0
         ? http.post(Uri.parse(url), headers: header, body: _body)
         : http.put(Uri.parse(url), headers: header, body: _body));
- //   print('Response status: ${response.statusCode}');
+    //   print('Response status: ${response.statusCode}');
     return response.statusCode;
   }
+
+  static Future<List<Agendamentos>> getAgendaMedico() async {
+    Future<String> _buscarToken() async {
+      var setup = await Prefs.getString('user.prefs');
+      Map<String, dynamic> mapResponse = json.decode(setup);
+      return (mapResponse['token']);
+    }
+
+    var _token = await _buscarToken();
+
+    var setup = Setups();
+
+    var url = Uri.parse(setup.conexao +
+        '/agendamentos/medico?linesPerPage=24&page=0&direction=DESC');
+
+    var header = {
+      "Content-Type": "application/json",
+      "Accept-Charset": "utf-8",
+      "Authorization": "$_token"
+    };
+    final response = await http.get(url, headers: header);
+
+    List<Agendamentos> agendamentos = [];
+    //  print(response.statusCode);
+    switch (response.statusCode) {
+      case 200:
+        String body = utf8.decode(response.bodyBytes);
+        final mapResponse = jsonDecode(body);
+        //   print(mapResponse['content'][0]['medico']['nome']);
+        for (var item in mapResponse['content']) {
+          //     print(item['especialidade']['nome']);
+          agendamentos.add(Agendamentos(
+              item['id'].toString(),
+              item['especialidade']['nome'],
+              item['medico']['nome'],
+              item['usuario']['nome'],
+              item['dataDisponivel'],
+              item['hora']['hora'],
+              item['tipoConsulta']['tipoConsulta'],
+              item['ultimaAlteracao'],
+              item['observacao']));
+        }
+        return agendamentos;
+        break;
+      case 201:
+        return agendamentos;
+        break;
+      default:
+        throw Exception('Conexão falhou :(');
+    }
+    //   return agendamentos;
+  }
+
+  static editarAgenda(id) {}
 }

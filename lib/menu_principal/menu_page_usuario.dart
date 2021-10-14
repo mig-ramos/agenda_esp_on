@@ -20,7 +20,7 @@ class _MenuPageUsuarioState extends State<MenuPageUsuario> {
   @override
   initState() {
     super.initState();
-   _agendamento = AgendaApi.getAgenda();
+   _agendamento = AgendaApi.getAgendaPaciente();
   }
 
   @override
@@ -34,7 +34,7 @@ class _MenuPageUsuarioState extends State<MenuPageUsuario> {
               icon: Icon(Icons.refresh,color: Colors.white,),
               onPressed: () {
                 setState(() {
-                 _agendamento = AgendaApi.getAgenda();
+                 _agendamento = AgendaApi.getAgendaPaciente();
                 });
               },
             ),
@@ -180,7 +180,7 @@ class _MenuPageUsuarioState extends State<MenuPageUsuario> {
     if (response == 204) {
       setState(() {
         alert(context, 'Ok. Solicitação atendida \nDeletado o agendamento.');
-        _agendamento = AgendaApi.getAgenda();
+        _agendamento = AgendaApi.getAgendaPaciente();
       });
     }
   }
