@@ -101,7 +101,7 @@ class _EditarSenhaUsuarioState extends State<EditarSenhaUsuario> {
               ),
               hintText: "Digite a Senha Atual",
               hintStyle: TextStyle(
-                color: Colors.black,
+                color: Colors.black38,
                 fontSize: 18,
               ),
             ),
@@ -128,7 +128,7 @@ class _EditarSenhaUsuarioState extends State<EditarSenhaUsuario> {
               ),
               hintText: "Digite a nova senha",
               hintStyle: TextStyle(
-                color: Colors.black,
+                color: Colors.black38,
                 fontSize: 18,
               ),
             ),
@@ -155,7 +155,7 @@ class _EditarSenhaUsuarioState extends State<EditarSenhaUsuario> {
               ),
               hintText: "Repetir a Nova Senha",
               hintStyle: TextStyle(
-                color: Colors.black,
+                color: Colors.black38,
                 fontSize: 18,
               ),
             ),

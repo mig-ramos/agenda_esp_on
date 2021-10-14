@@ -42,7 +42,7 @@ class AgendaEspOn extends StatelessWidget {
         '/cadUserPage': (context) => CadUserPage(title: 'Cadastrar Usuário'),
         '/menuPageUsuario': (context) => MenuPageUsuario(title: 'Ephemeris'),
         '/menuPageMedico': (context) => MenuPageMedico(title: 'Ephemeris'),
-        '/menuPageAdmin': (context) => MenuPageAdmin(title: 'Especialidades'),
+        '/menuPageAdmin': (context) => MenuPageAdmin(title: 'Lista de Especialidades'),
         '/listaUsuPage': (context) => ListaUsuPage(title: 'Lista de Usuários'),
         '/cadUsuAdminPage': (context) => CadUsuAdminPage(title: 'Cadastro de Paciente'),
         '/cadMediAdminPage': (context) => CadMediAdminPage(title: 'Cadastro de Médico'),

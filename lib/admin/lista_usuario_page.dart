@@ -22,27 +22,55 @@ class _ListaUsuPageState extends State<ListaUsuPage> {
     _usuario = UsuarioApi.listaUsuarios();
   }
 
+  final List<Tab> myTabs = <Tab>[
+    Tab(text: 'PACIENTES'),
+    Tab(text: 'MÉDICOS'),
+    Tab(text: 'ÚLTIMOS'),
+  ];
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-        centerTitle: true,
-        actions: [
-          IconButton(
-            icon: Icon(
-              Icons.refresh,
-              color: Colors.white,
-            ),
-            onPressed: () {
-              setState(() {
-                _usuario = UsuarioApi.listaUsuarios();
-              });
-            },
+    return DefaultTabController(
+      length: myTabs.length,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(widget.title),
+          centerTitle: true,
+          // actions: [
+          //   IconButton(
+          //     icon: Icon(
+          //       Icons.refresh,
+          //       color: Colors.white,
+          //     ),
+          //     onPressed: () {
+          //       setState(() {
+          //         _usuario = UsuarioApi.listaUsuarios();
+          //       });
+          //     },
+          //   ),
+          // ],
+          bottom: TabBar(
+            tabs: myTabs,
           ),
-        ],
+        ),
+        body: TabBarView(
+          children: [
+            buildFutureBuilderPacientes(),
+            buildFutureBuilderMedicos(),
+            buildFutureBuilderUsuarios()
+          ],
+        ),
       ),
-      body: FutureBuilder(
+    );
+  }
+
+  FutureBuilder<List<UsuarioLista>> buildFutureBuilderPacientes() {
+
+    setState(() {
+      _usuario = UsuarioApi.listaPacientes();
+    });
+
+    return FutureBuilder(
         future: _usuario,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
@@ -82,18 +110,107 @@ class _ListaUsuPageState extends State<ListaUsuPage> {
             child: CircularProgressIndicator(),
           );
         },
-      ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(
-          Icons.add,
-        ),
-        backgroundColor: Colors.amber,
-        onPressed: () async {
-          ///PROGRAMAR CADASTRO NAVIGATOR
-        },
-      ),
+      );
+  }
+
+  FutureBuilder<List<UsuarioLista>> buildFutureBuilderMedicos() {
+
+    setState(() {
+      _usuario = UsuarioApi.listaMedicos();
+    });
+
+    return FutureBuilder(
+      future: _usuario,
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return ListView(
+            children: _listUsuarios(snapshot.data),
+          );
+        } else if (snapshot.hasError) {
+          return Center(
+            child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'O Administrador não tem\n   Usuario..',
+                    style: TextStyle(
+                      fontSize: 22,
+                    ),
+                  ),
+                  Text(
+                    '\nPara adicionar: \nBasta clicar no botão (+)',
+                    style: TextStyle(
+                        fontSize: 20,
+                        color: Colors.amber,
+                        fontWeight: FontWeight.bold),
+                  ),
+                  Text(
+                    '\nPara Excluir Usuario: \nBasta manter clicado\no Cartão de Especialidade..',
+                    style: TextStyle(
+                      fontSize: 20,
+                      color: Colors.red,
+                    ),
+                  )
+                ]),
+          );
+        }
+        return Center(
+          child: CircularProgressIndicator(),
+        );
+      },
     );
   }
+
+  FutureBuilder<List<UsuarioLista>> buildFutureBuilderUsuarios() {
+
+    setState(() {
+      _usuario = UsuarioApi.listaUsuarios();
+    });
+
+    return FutureBuilder(
+      future: _usuario,
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return ListView(
+            children: _listUsuarios(snapshot.data),
+          );
+        } else if (snapshot.hasError) {
+          return Center(
+            child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'O Administrador não tem\n   Usuario..',
+                    style: TextStyle(
+                      fontSize: 22,
+                    ),
+                  ),
+                  Text(
+                    '\nPara adicionar: \nBasta clicar no botão (+)',
+                    style: TextStyle(
+                        fontSize: 20,
+                        color: Colors.amber,
+                        fontWeight: FontWeight.bold),
+                  ),
+                  Text(
+                    '\nPara Excluir Usuario: \nBasta manter clicado\no Cartão de Especialidade..',
+                    style: TextStyle(
+                      fontSize: 20,
+                      color: Colors.red,
+                    ),
+                  )
+                ]),
+          );
+        }
+        return Center(
+          child: CircularProgressIndicator(),
+        );
+      },
+    );
+  }
+
 
   List<Widget> _listUsuarios(data) {
     List<Widget> usuarios = [];

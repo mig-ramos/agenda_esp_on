@@ -388,7 +388,7 @@ class UsuarioApi {
 
     var _token = await _buscarToken();
     var setup = Setups();
-    var url = Uri.parse(setup.conexao + '/usuarios/page?linesPerPage=20&page=0&orderBy=nome&direction=ASC');
+    var url = Uri.parse(setup.conexao + '/usuarios/page?linesPerPage=20&page=0&orderBy=id&direction=DESC');
 
     var header = {
       "Content-Type": "application/json",
@@ -419,10 +419,98 @@ class UsuarioApi {
       default:
         throw Exception('Falha na conexão');
     }
-    print(listaUsu);
-    return listaUsu;
 
+    return listaUsu;
   }
+
+  static Future<List<UsuarioLista>> listaMedicos() async {
+    Future<String> _buscarToken() async {
+      var setup = await Prefs.getString('user.prefs');
+      Map<String, dynamic> mapResponse = json.decode(setup);
+      return (mapResponse['token']);
+    }
+
+    var _token = await _buscarToken();
+    var setup = Setups();
+    var url = Uri.parse(setup.conexao + '/medicos/page?linesPerPage=20&page=0&orderBy=nome&direction=ASC');
+
+    var header = {
+      "Content-Type": "application/json",
+      "Accept-Charset": "utf-8",
+      "Authorization": "$_token"
+    };
+
+    final response = await http.get(url, headers: header);
+
+    List<UsuarioLista> listaUsu = [];
+
+    switch (response.statusCode) {
+      case 200:
+        String body = utf8.decode(response.bodyBytes);
+        final jsonData = jsonDecode(body);
+        for (var item in jsonData['content']) {
+          listaUsu.add(UsuarioLista(
+              id: item['id'],
+              nome: item['nome'],
+              email: item['email'],
+              senha: item['senha'])
+          );
+        }
+        break;
+      case 403:
+        print('Conexão encerrada.. Entre novamente');
+        break;
+      default:
+        throw Exception('Falha na conexão');
+    }
+
+    return listaUsu;
+  }
+
+  static Future<List<UsuarioLista>> listaPacientes() async {
+    Future<String> _buscarToken() async {
+      var setup = await Prefs.getString('user.prefs');
+      Map<String, dynamic> mapResponse = json.decode(setup);
+      return (mapResponse['token']);
+    }
+
+    var _token = await _buscarToken();
+    var setup = Setups();
+    var url = Uri.parse(setup.conexao + '/pacientes/page?linesPerPage=20&page=0&orderBy=nome&direction=ASC');
+
+    var header = {
+      "Content-Type": "application/json",
+      "Accept-Charset": "utf-8",
+      "Authorization": "$_token"
+    };
+
+    final response = await http.get(url, headers: header);
+
+    List<UsuarioLista> listaUsu = [];
+
+    switch (response.statusCode) {
+      case 200:
+        String body = utf8.decode(response.bodyBytes);
+        final jsonData = jsonDecode(body);
+        for (var item in jsonData['content']) {
+          listaUsu.add(UsuarioLista(
+              id: item['id'],
+              nome: item['nome'],
+              email: item['email'],
+              senha: item['senha'])
+          );
+        }
+        break;
+      case 403:
+        print('Conexão encerrada.. Entre novamente');
+        break;
+      default:
+        throw Exception('Falha na conexão');
+    }
+
+    return listaUsu;
+  }
+
 
   static Future<int> delUsuario(id) async {
     final _id = id;
