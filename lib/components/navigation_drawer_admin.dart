@@ -150,7 +150,7 @@ class NavigationDrawerAdmin extends StatelessWidget {
          Navigator.of(context).pushNamed('/cadUsuAdminPage');
         break;
       case 2:
-        Navigator.of(context).pushNamed('/cadUsuAdminPage');
+        Navigator.of(context).pushNamed('/cadMediAdminPage');
         break;
       case 3:
         Navigator.of(context).pushNamed('/listaUsuPage');

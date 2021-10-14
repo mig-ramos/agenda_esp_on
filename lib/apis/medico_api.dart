@@ -157,4 +157,83 @@ class MedicoApi {
     }
     return medi;
   }
+
+  static Future<int> saveMedi(int id, String nome, String email, String senha, String codigo,String crm, String dataInscricao, int idEspe) async {
+
+    int _id = id;
+    String _nome = nome;
+    String _email = email;
+    String _senha = senha;
+    String _codigo = codigo;
+    String _crm = crm;
+    String _dataInscricao = dataInscricao;
+    int _idEspecialidade = idEspe;
+
+    Future<String> _buscarToken() async {
+      var setup = await Prefs.getString('user.prefs');
+      Map<String, dynamic> mapResponse = json.decode(setup);
+      return (mapResponse['token']);
+    }
+    var _token = await _buscarToken();
+
+    var setup = Setups();
+
+    var url = '';
+
+    if (_id == 0){
+      url = setup.conexao+'/medicos';
+    } else {
+      url = setup.conexao+'/medicos/'+_id;
+    }
+
+    var header = {
+      "Content-Type": "application/json",
+      "Accept-Charset": "utf-8",
+      "Authorization": _token
+    };
+
+    Map params;
+    if (_id == 0) {
+      params = {
+        "email": _email,
+        "senha": _senha,
+        "codigo": _codigo,
+        "instante": "",
+        "ativo": true,
+        "perfil": {
+          "id": 2,
+          "nome": "MEDICO"
+        },
+        "nome": _nome,
+        "crm": _crm,
+        "data_inscricao": _dataInscricao,
+        "especialidade_id": _idEspecialidade
+      };
+    } else {
+      params = {
+        "id": _id,
+        "email": _email,
+        "senha": _senha,
+        "codigo": _codigo,
+        "instante": "",
+        "ativo": true,
+        "perfil": {
+          "id": 2,
+          "nome": "MEDICO"
+        },
+        "nome": _nome,
+        "crm": _crm,
+        "data_inscricao": _dataInscricao,
+        "especialidade_id": _idEspecialidade
+      };
+    }
+   // print("Parametros: $params");
+    var _body = json.encode(params);
+  // print("json a ser enviado: $_body");
+    var response = await (_id == 0
+        ? http.post(Uri.parse(url), headers: header, body: _body)
+        : http.put(Uri.parse(url), headers: header, body: _body));
+   //    print('Response status: ${response.statusCode}');
+    return response.statusCode;
+  }
 }

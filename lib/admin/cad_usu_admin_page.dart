@@ -115,7 +115,7 @@ class _CadUsuAdminPageState extends State<CadUsuAdminPage> {
                   ),
                   hintText: "Digite o seu nome",
                   hintStyle: TextStyle(
-                    color: Colors.black,
+                    color: Colors.black38,
                     fontSize: 18,
                   ),
                 ),
@@ -141,7 +141,7 @@ class _CadUsuAdminPageState extends State<CadUsuAdminPage> {
                   ),
                   hintText: "Digite o seu email",
                   hintStyle: TextStyle(
-                    color: Colors.black,
+                    color: Colors.black38,
                     fontSize: 18,
                   ),
                 ),
@@ -168,7 +168,7 @@ class _CadUsuAdminPageState extends State<CadUsuAdminPage> {
                   ),
                   hintText: "Digite a sua Senha",
                   hintStyle: TextStyle(
-                    color: Colors.black,
+                    color: Colors.black38,
                     fontSize: 18,
                   ),
                 ),
@@ -249,7 +249,7 @@ class _CadUsuAdminPageState extends State<CadUsuAdminPage> {
     String senha = _txtSenha.text;
     DateTime dataNascimento = currentDate;
 
-    print("Id $id, Nome $nome, Email $email, Senha $senha, Data nascimento: $dataNascimento");
+   // print("Id $id, Nome $nome, Email $email, Senha $senha, Data nascimento: $dataNascimento");
 
     if (!_formKey.currentState!.validate()) {
       return;

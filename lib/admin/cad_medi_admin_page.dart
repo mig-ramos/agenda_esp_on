@@ -1,9 +1,10 @@
-import 'package:agenda_esp_on/apis/usuario_api.dart';
+import 'package:agenda_esp_on/apis/especialidade_api.dart';
+import 'package:agenda_esp_on/apis/medico_api.dart';
 import 'package:agenda_esp_on/components/alert.dart';
+import 'package:agenda_esp_on/models/especialidade_lista.dart';
 import 'package:agenda_esp_on/utils/string_capitalize.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/intl.dart';
 
 class CadMediAdminPage extends StatefulWidget {
@@ -19,11 +20,13 @@ class _CadMediAdminPageState extends State<CadMediAdminPage> {
   TextEditingController _txtNome = TextEditingController();
   TextEditingController _txtEmail = TextEditingController();
   TextEditingController _txtSenha = TextEditingController();
+  TextEditingController _txtCrm = TextEditingController();
+
+  String _dropEspecialidadeValue = 'Buscar..';
 
   var _progress = false;
 
   TextStyle _styleCampo = TextStyle(fontSize: 22);
-
   TextStyle _styleValor = const TextStyle(
       fontWeight: FontWeight.normal,
       fontSize: 22,
@@ -39,12 +42,13 @@ class _CadMediAdminPageState extends State<CadMediAdminPage> {
       decorationColor: Colors.black38);
 
   DateTime currentDate = DateTime.now();
+  TextStyle styleCampo = TextStyle(fontSize: 22);
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? pickedDate = await showDatePicker(
         context: context,
         initialDate: currentDate,
-        firstDate: DateTime(1920),
+        firstDate: DateTime(1960),
         lastDate: DateTime(2050));
     if (pickedDate != null && pickedDate != currentDate)
       setState(() {
@@ -55,7 +59,13 @@ class _CadMediAdminPageState extends State<CadMediAdminPage> {
 
   void initState() {
     super.initState();
+    _recuperaDados();
   }
+
+  List<EspecialidadeLista> espe = [];
+  List<String> _listaEspecial = ['Buscar..'];
+
+  late int _idEspe = 0;
 
   bool click = true;
 
@@ -115,7 +125,7 @@ class _CadMediAdminPageState extends State<CadMediAdminPage> {
                   ),
                   hintText: "Digite o seu nome",
                   hintStyle: TextStyle(
-                    color: Colors.black,
+                    color: Colors.black38,
                     fontSize: 18,
                   ),
                 ),
@@ -141,7 +151,7 @@ class _CadMediAdminPageState extends State<CadMediAdminPage> {
                   ),
                   hintText: "Digite o seu email",
                   hintStyle: TextStyle(
-                    color: Colors.black,
+                    color: Colors.black38,
                     fontSize: 18,
                   ),
                 ),
@@ -168,19 +178,46 @@ class _CadMediAdminPageState extends State<CadMediAdminPage> {
                   ),
                   hintText: "Digite a sua Senha",
                   hintStyle: TextStyle(
+                    color: Colors.black38,
+                    fontSize: 18,
+                  ),
+                ),
+              ),
+              TextFormField(
+                controller: _txtCrm,
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'Informe o CRM';
+                  }
+                  return null;
+                },
+                keyboardType: TextInputType.text,
+                style: TextStyle(
+                  color: Colors.blue,
+                  fontSize: 22,
+                ),
+                decoration: InputDecoration(
+                  labelText: "CRM:",
+                  labelStyle: TextStyle(
                     color: Colors.black,
+                    // fontWeight: FontWeight.bold,
+                    fontSize: 22,
+                  ),
+                  hintText: "Digite o código do CRM",
+                  hintStyle: TextStyle(
+                    color: Colors.black38,
                     fontSize: 18,
                   ),
                 ),
               ),
               Container(
-                height: 100,
+                height: 80,
                 child: Row(
                   children: [
                     SizedBox(
-                      width: 200,
+                      width: 170,
                       child: Text(
-                        'Data nascimento: ',
+                        'Data Inscrição:',
                         style: _styleCampo,
                       ),
                     ),
@@ -191,6 +228,43 @@ class _CadMediAdminPageState extends State<CadMediAdminPage> {
                     ),
                   ],
                 ),
+              ),
+              Divider(
+                color: Colors.black38,
+                height: 20,
+              ),
+              Container(
+                child: Row(children: [
+                  Text(
+                    'Espec:  ',
+                    style: styleCampo,
+                  ),
+                  DropdownButton<String>(
+                    value: _dropEspecialidadeValue,
+                    dropdownColor: Colors.white,
+                    style: const TextStyle(
+                        fontWeight: FontWeight.normal,
+                        fontSize: 22,
+                        color: Colors.blue),
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        _dropEspecialidadeValue = newValue!;
+                        _recuperaIdEspe(_dropEspecialidadeValue);
+                      });
+                    },
+                    items: _listaEspecial
+                        .map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                  ),
+                ]),
+              ),
+              Divider(
+                color: Colors.black38,
+                height: 20,
               ),
               Container(
                 height: 46,
@@ -237,7 +311,7 @@ class _CadMediAdminPageState extends State<CadMediAdminPage> {
     );
   }
 
-  _onClickCancelar(context) {
+  _onClickCancelar(context) async {
     // Navigator.of(context).pushReplacementNamed('/');
     Navigator.pop(context);
   }
@@ -247,9 +321,10 @@ class _CadMediAdminPageState extends State<CadMediAdminPage> {
     String nome = (_txtNome.text).capitalizeFirstofEach;
     String email = _txtEmail.text;
     String senha = _txtSenha.text;
-    DateTime dataNascimento = currentDate;
-
-    print("Id $id, Nome $nome, Email $email, Senha $senha, Data nascimento: $dataNascimento");
+    String codigo = '';
+    String crm = _txtCrm.text;
+    String dataInscricao = DateFormat("dd/MM/yyyy").format(currentDate);
+    int idEspecialidade = _idEspe;
 
     if (!_formKey.currentState!.validate()) {
       return;
@@ -259,17 +334,20 @@ class _CadMediAdminPageState extends State<CadMediAdminPage> {
       _progress = true;
     });
 
-    var usuario =
-        await UsuarioApi.saveUsu(id, nome, email, senha, dataNascimento);
+    var response = await MedicoApi.saveMedi(id, nome, email, senha, codigo, crm, dataInscricao, idEspecialidade);
 
-    switch (usuario.statusCode) {
+    switch (response) {
       case 200:
         Navigator.pop(context);
-        alert(context, 'Usuário Alterado \ncom sucesso!!');
+        alert(context, 'Médico Alterado \ncom sucesso!!');
         break;
       case 201:
         Navigator.pop(context);
-        alert(context, 'Usuário Cadastrado \ncom sucesso!!');
+        alert(context, 'Médico Cadastrado \ncom sucesso!!');
+        break;
+      case 400:
+        Navigator.pop(context);
+        alert(context, 'FALHA \nna transmissão de dados..');
         break;
       case 500:
         alert(context, 'Email: $email \njá Cadastrado..');
@@ -278,6 +356,25 @@ class _CadMediAdminPageState extends State<CadMediAdminPage> {
     }
     setState(() {
       _progress = false;
+    });
+  }
+
+  _recuperaIdEspe(String nome){
+    for (int i = 0; i < espe.length; i++) {
+      if (nome == espe[i].nome) {
+        _idEspe = espe[i].id;
+      }
+    }
+    setState(() {});
+  }
+
+  _recuperaDados() async {
+    espe = await EspecialidadeApi.listEspecialidades();
+    for (int i = 0; i < espe.length; i++) {
+          _listaEspecial.add(espe[i].nome);
+      }
+    setState(() {
+      _listaEspecial;
     });
   }
 }
