@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:agenda_esp_on/apis/usuario_api.dart';
 import 'package:agenda_esp_on/components/alert.dart';
 import 'package:agenda_esp_on/utils/function_utils.dart';
@@ -18,7 +17,6 @@ class EditarUsuarioPage extends StatefulWidget {
 }
 
 class _EditarUsuarioPageState extends State<EditarUsuarioPage> {
-
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   TextEditingController _txtNome = TextEditingController();
@@ -45,9 +43,10 @@ class _EditarUsuarioPageState extends State<EditarUsuarioPage> {
         currentDate = pickedDate;
       });
   }
+
   initState() {
     super.initState();
- _recuperaDados();
+    _recuperaDados();
   }
 
   final ButtonStyle _elevatedButtonOk = ElevatedButton.styleFrom(
@@ -120,7 +119,7 @@ class _EditarUsuarioPageState extends State<EditarUsuarioPage> {
           TextFormField(
             controller: _txtEmail,
             validator: (value) {
-              if(value!.isEmpty){
+              if (value!.isEmpty) {
                 return 'Informe seu Email';
               }
               return null;
@@ -146,7 +145,7 @@ class _EditarUsuarioPageState extends State<EditarUsuarioPage> {
           TextFormField(
             controller: _txtSenha,
             validator: (value) {
-              if(value!.length < 2) {
+              if (value!.length < 2) {
                 return "Senha precisa ter mais de 2 caracteres";
               }
               return null;
@@ -171,7 +170,6 @@ class _EditarUsuarioPageState extends State<EditarUsuarioPage> {
               ),
             ),
           ),
-
           Row(
             children: [
               SizedBox(
@@ -183,11 +181,9 @@ class _EditarUsuarioPageState extends State<EditarUsuarioPage> {
               ),
               TextButton(
                 onPressed: () => _selectDate(context),
-                child: Text(
-                    DateFormat("dd/MM/yyyy").format(currentDate),
+                child: Text(DateFormat("dd/MM/yyyy").format(currentDate),
                     style: styleValor),
               ),
-
             ],
           ),
           Container(
@@ -197,15 +193,15 @@ class _EditarUsuarioPageState extends State<EditarUsuarioPage> {
               style: _elevatedButtonOk,
               child: _progress
                   ? CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation(Colors.white),
-              )
+                      valueColor: AlwaysStoppedAnimation(Colors.white),
+                    )
                   : Text(
-                "Confirmar",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 22,
-                ),
-              ),
+                      "Confirmar",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 22,
+                      ),
+                    ),
               onPressed: () {
                 _onClickEditar(context);
               },
@@ -244,7 +240,8 @@ class _EditarUsuarioPageState extends State<EditarUsuarioPage> {
     String senha = _txtSenha.text;
     DateTime dataNascimento = currentDate;
 
-    print("Envio de variáveis: Id $id Nome $nome, Email $email, Senha $senha, Data nascimento: $dataNascimento");
+    print(
+        "Envio de variáveis: Id $id Nome $nome, Email $email, Senha $senha, Data nascimento: $dataNascimento");
     if (!_formKey.currentState!.validate()) {
       return;
     }
@@ -253,19 +250,20 @@ class _EditarUsuarioPageState extends State<EditarUsuarioPage> {
       _progress = true;
     });
 
-    var usuario = await UsuarioApi.saveUsu(id, nome, email, senha, dataNascimento);
+    var usuario =
+        await UsuarioApi.saveUsu(id, nome, email, senha, dataNascimento);
 
-    switch(usuario.statusCode){
+    switch (usuario.statusCode) {
       case 204:
         Navigator.pop(context);
-        alert(context,'Usuário Alterado \ncom sucesso!!');
+        alert(context, 'Usuário Alterado \ncom sucesso!!');
         break;
       case 201:
         Navigator.pop(context);
-        alert(context,'Usuário Cadastrado \ncom sucesso!!');
+        alert(context, 'Usuário Cadastrado \ncom sucesso!!');
         break;
       case 500:
-        alert(context,'Email: $email \njá Cadastrado..');
+        alert(context, 'Email: $email \njá Cadastrado..');
         break;
       default:
     }
@@ -275,13 +273,13 @@ class _EditarUsuarioPageState extends State<EditarUsuarioPage> {
     });
   }
 
-  _recuperaDados() async{
+  _recuperaDados() async {
     Map mapResponse = json.decode(await Prefs.getString('usuario.prefs'));
-    // print(mapResponse);
+    print(mapResponse);
     _txtNome.text = mapResponse["nome"];
     _txtEmail.text = mapResponse["email"];
     _txtSenha.text = mapResponse["senha"];
-    setState((){
+    setState(() {
       currentDate = stringToDate(mapResponse["data_nascimento"]);
       _id = mapResponse["id"];
     });

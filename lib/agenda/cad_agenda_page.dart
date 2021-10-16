@@ -402,7 +402,8 @@ class _CadAgendaPageState extends State<CadAgendaPage> {
           _idEspe,
           _idMotivo,
           _idMedi,
-          _idHora);
+          _idHora,
+          'Sem Observação');
       switch (response) {
         case 204:
           Navigator.pop(context);

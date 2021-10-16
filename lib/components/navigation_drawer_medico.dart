@@ -133,6 +133,7 @@ class NavigationDrawerMedico extends StatelessWidget {
     switch (index) {
       case 0:
       //    Navigator.of(context).pushNamed('/editaMedicoPage');
+      //  Navigator.of(context).pushNamed('/editaAgendaUsuPage');
         break;
       case 1:
         Navigator.of(context).pushNamed('/editaMedicoPage');

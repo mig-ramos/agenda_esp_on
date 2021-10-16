@@ -12,6 +12,6 @@ DateTime stringToDate(String date){
 
 String stringToString(String date){
   String _dateString = "";
-  _dateString = date.substring(7,9)+'/'+date.substring(5,6)+'-'+date.substring(0,4);
+  _dateString = date.substring(7,9)+'/'+date.substring(5,6)+'/'+date.substring(0,4);
   return _dateString;
 }

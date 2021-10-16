@@ -1,5 +1,4 @@
 import 'package:agenda_esp_on/apis/agenda_api.dart';
-import 'package:agenda_esp_on/components/alert.dart';
 import 'package:agenda_esp_on/components/navigation_drawer_medico.dart';
 import 'package:agenda_esp_on/models/agendamentos.dart';
 import 'package:flutter/cupertino.dart';
@@ -14,7 +13,6 @@ class MenuPageMedico extends StatefulWidget {
 }
 
 class _MenuPageMedicoState extends State<MenuPageMedico> {
-
   late Future<List<Agendamentos>> _agendamento;
 
   @override
@@ -32,7 +30,10 @@ class _MenuPageMedicoState extends State<MenuPageMedico> {
         centerTitle: true,
         actions: [
           IconButton(
-            icon: Icon(Icons.refresh,color: Colors.white,),
+            icon: Icon(
+              Icons.refresh,
+              color: Colors.white,
+            ),
             onPressed: () {
               setState(() {
                 _agendamento = AgendaApi.getAgendaMedico();
@@ -95,6 +96,7 @@ class _MenuPageMedicoState extends State<MenuPageMedico> {
   }
 
   List<Widget> _listCompromissos(data) {
+   // print(_listCompromissos(data));
     List<Widget> compromissos = [];
     for (var comp in data) {
       compromissos.add(Card(
@@ -109,20 +111,21 @@ class _MenuPageMedicoState extends State<MenuPageMedico> {
                 },
                 title: Text(_stringToString(comp.data) +
                     ' às ' +
-                    comp.hora +' hs' +
-                    '\nUsuário: ' +
-                    comp.usuario+
+                    comp.hora +
+                    ' hs' +
+                    '\nPaciente: ' +
+                    comp.usuario +
                     '\nAtendimento: ' +
-                    comp.motivo+
+                    comp.motivo +
                     '\nEdição: ' +
-                    comp.ultimaAlteracao+
+                    comp.ultimaAlteracao +
                     '\nObs.: ' +
                     comp.observacao),
-                subtitle: Text(comp.especial+' / '+comp.medico),
+                subtitle: Text(comp.especial + ' / ' + comp.medico),
                 leading: CircleAvatar(
                   child: Text(comp.usuario.substring(0, 1)),
                 ),
-                trailing: Icon(Icons.edit,color: Colors.amber),
+                trailing: Icon(Icons.edit, color: Colors.amber),
               )
             ],
           ),
@@ -146,48 +149,54 @@ class _MenuPageMedicoState extends State<MenuPageMedico> {
     showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          title: Text("Editar Agendamento?"),
-          content: Text('De: ' +
-              _stringToString(comp.data) +
-              ' às ' +
-              comp.hora +
-              '\nCom: ' +
-              comp.usuario +
-              '\nPara: ' +
-              comp.motivo),
-          actions: [
-            TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: Text('Cancelar')),
-            TextButton(
-                onPressed: () {
-                  //  print(comp.especial);
-                  this.setState(() {
-                    this._editarAgenda(comp.id);
-                    Navigator.pop(context);
-                  });
-                },
-                child: Text(
-                  'Deletar',
-                  style: TextStyle(color: Colors.red),
-                ))
-          ],
-        )
-    );
+              title: Text("Editar Agendamento?"),
+              content: Text('De: ' +
+                  _stringToString(comp.data) +
+                  ' às ' +
+                  comp.hora +
+                  '\nCom: ' +
+                  comp.usuario +
+                  '\nPara: ' +
+                  comp.motivo),
+              actions: [
+                TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: Text('Cancelar')),
+                TextButton(
+                    onPressed: () async {
+                      //  print(comp.especial);
+                      // this.setState(() {
+                      int _idx = comp.id;
+                    //  this._editarAgenda(comp.id);
+                      var response = await AgendaApi.findAgenda(_idx);
+                      print('RESPONDENDO AQUI $response');
+                      if (response != null) {
+                        Navigator.pop(context);
+                        Navigator.of(context).pushNamed('/editaAgendaUsuPage');
+                        // });
+                      }
+                    },
+                    child: const Text(
+                      'Editar',
+                      style: TextStyle(color: Colors.red),
+                    ))
+              ],
+            ));
   }
 
   _editarAgenda(id) async {
-    //  print(id);
-    int response = await AgendaApi.editarAgenda(id);
-    if (response == 204) {
-      setState(() {
-        alert(context, 'Ok. Solicitação atendida \nEditado o agendamento.');
-        _agendamento = AgendaApi.getAgendaMedico();
-      });
-    }
+     var response = await AgendaApi.findAgenda(id);
+  //    if (response == 200) {
+  //   //   setState(() {
+  //   //     alert(context, 'Ok. Solicitação atendida \nEditado o agendamento.');
+  //   //     _agendamento = AgendaApi.getAgendaMedico();
+  //   //   });
+  //   // }
+  //
+  //   // Navigator.of(context).pushReplacementNamed('/editaAgendaUsuPage');
+  //   // Navigator.of(context).pushNamed('/editaAgendaUsuPage');
+  // }
   }
-
-
 }

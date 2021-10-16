@@ -38,15 +38,21 @@ class AgendaApi {
         for (var item in mapResponse['content']) {
           //     print(item['especialidade']['nome']);
           agendamentos.add(Agendamentos(
-              item['id'].toString(),
+              item['id'],
+              item['especialidade']['id'],
               item['especialidade']['nome'],
+              item['medico']['id'],
               item['medico']['nome'],
+              item['usuario']['id'],
               item['usuario']['nome'],
               item['dataDisponivel'],
+              item['hora']['id'],
               item['hora']['hora'],
+              item['tipoConsulta']['id'],
               item['tipoConsulta']['tipoConsulta'],
               item['ultimaAlteracao'],
-              item['observacao']));
+              item['observacao']
+              ));
         }
         return agendamentos;
         break;
@@ -90,15 +96,21 @@ class AgendaApi {
         for (var item in mapResponse['content']) {
           //     print(item['especialidade']['nome']);
           agendamentos.add(Agendamentos(
-              item['id'].toString(),
+              item['id'],
+              item['especialidade']['id'],
               item['especialidade']['nome'],
+              item['medico']['id'],
               item['medico']['nome'],
+              item['usuario']['id'],
               item['usuario']['nome'],
               item['dataDisponivel'],
+              item['hora']['id'],
               item['hora']['hora'],
+              item['tipoConsulta']['id'],
               item['tipoConsulta']['tipoConsulta'],
               item['ultimaAlteracao'],
-              item['observacao']));
+              item['observacao']
+              ));
         }
         return agendamentos;
         break;
@@ -157,9 +169,8 @@ class AgendaApi {
     return dropHoras;
   }
 
-  static Future<int> salvaAgenda(int id, String dataDisponivel, int idEspe, int idTipo,
-      int idMedi, int idHora) async {
-
+  static Future<int> salvaAgenda(int id, String dataDisponivel, int idEspe,
+      int idTipo, int idMedi, int idHora, String observacao) async {
     int _id = id;
     int _idEspe = idEspe;
     int _idMedi = idMedi;
@@ -173,7 +184,8 @@ class AgendaApi {
     String _nomeUsu = usu.nome;
 
     Usu _usu = Usu(id: _idUsu, email: _emailUsu, nome: _nomeUsu);
-    String _obs = '';
+
+    String _obs = observacao;
 
     Future<String> _buscarToken() async {
       var setup = await Prefs.getString('user.prefs');
@@ -208,7 +220,7 @@ class AgendaApi {
         "hora": {'id': _idHr},
         "tipoConsulta": {'id': _idCons},
         "usuario": _usu,
-        //   "observacao": _obs,
+        "observacao": _obs,
       };
     } else {
       params = {
@@ -232,6 +244,44 @@ class AgendaApi {
     return response.statusCode;
   }
 
+  static Future<int> editaAgenda(int id, String observacao) async {
+    int _id = id;
+    String _obs = observacao;
+
+    Future<String> _buscarToken() async {
+      var setup = await Prefs.getString('user.prefs');
+      Map<String, dynamic> mapResponse = json.decode(setup);
+      return (mapResponse['token']);
+    }
+
+    var _token = await _buscarToken();
+
+    var setup = Setups();
+
+    var url = setup.conexao + '/agendamentos/$_id';
+
+    var header = {
+      "Content-Type": "application/json",
+      "Accept-Charset": "utf-8",
+      "Authorization": _token
+    };
+
+    Map params;
+        params = {
+        "id": _id,
+        "observacao": _obs
+      };
+
+    var _body = json.encode(params);
+
+    var response = await (_id == 0
+        ? http.post(Uri.parse(url), headers: header, body: _body)
+        : http.put(Uri.parse(url), headers: header, body: _body));
+
+    return response.statusCode;
+  }
+
+
   static Future<List<Agendamentos>> getAgendaMedico() async {
     Future<String> _buscarToken() async {
       var setup = await Prefs.getString('user.prefs');
@@ -246,36 +296,45 @@ class AgendaApi {
     var url = Uri.parse(setup.conexao +
         '/agendamentos/medico?linesPerPage=24&page=0&direction=DESC');
 
+
     var header = {
       "Content-Type": "application/json",
       "Accept-Charset": "utf-8",
       "Authorization": "$_token"
     };
+
     final response = await http.get(url, headers: header);
 
-    List<Agendamentos> agendamentos = [];
+   List<Agendamentos> agendamentos = [];
     //  print(response.statusCode);
     switch (response.statusCode) {
       case 200:
+        int t = 0;
         String body = utf8.decode(response.bodyBytes);
         final mapResponse = jsonDecode(body);
-        //   print(mapResponse['content'][0]['medico']['nome']);
         for (var item in mapResponse['content']) {
-          //     print(item['especialidade']['nome']);
           agendamentos.add(Agendamentos(
-              item['id'].toString(),
+              item['id'],
+              item['especialidade']['id'],
               item['especialidade']['nome'],
+              item['medico']['id'],
               item['medico']['nome'],
+              item['usuario']['id'],
               item['usuario']['nome'],
               item['dataDisponivel'],
+              item['hora']['id'],
               item['hora']['hora'],
+              item['tipoConsulta']['id'],
               item['tipoConsulta']['tipoConsulta'],
               item['ultimaAlteracao'],
-              item['observacao']));
+              item['observacao']
+          ));
         }
+        print(agendamentos);
         return agendamentos;
         break;
       case 201:
+        print(agendamentos);
         return agendamentos;
         break;
       default:
@@ -285,4 +344,85 @@ class AgendaApi {
   }
 
   static editarAgenda(id) {}
+
+  static Future<Agendamentos?> findAgenda(id) async {
+
+    int _id = id;
+    int _idEspecial;
+    String _especial;
+    int _idMedico;
+    String _medico;
+    int _idUsuario;
+    String _usuario;
+    String _data;
+    int _idHora;
+    String _hora;
+    int _idMotivo;
+    String _motivo;
+    String _ultimaAlteracao;
+    String _observacao;
+
+    Future<String> _buscarToken() async {
+      var setup = await Prefs.getString('user.prefs');
+      Map<String, dynamic> mapResponse = json.decode(setup);
+      return (mapResponse['token']);    }
+
+    var _token = await _buscarToken();
+
+    var setup = Setups();
+    var url = Uri.parse(setup.conexao+ '/agendamentos/$_id');
+
+    var header = {
+      "Content-Type": "application/json",
+      "Accept-Charset": "utf-8",
+      "Authorization": "$_token"
+    };
+
+    var response = await http.get(url, headers: header);
+  //    print(' PRINT 2 ====  Response status API usuário: ${response.statusCode}');
+    String body = utf8.decode(response.bodyBytes);
+//     print(body);
+    final mapResponse = jsonDecode(body);
+
+    _id = mapResponse['id'];
+    _idEspecial = mapResponse['especialidade']['id'];
+    _especial = mapResponse['especialidade']['nome'];
+    _idMedico = mapResponse['medico']['id'];
+    _medico = mapResponse['medico']['nome'];
+    _idUsuario = mapResponse['usuario']['id'];
+    _usuario = mapResponse['usuario']['nome'];
+    _data =  mapResponse['dataDisponivel'];
+    _idHora = mapResponse['hora']['id'];
+    _hora = mapResponse['hora']['hora'];
+    _idMotivo = mapResponse['tipoConsulta']['id'];
+    _motivo = mapResponse['tipoConsulta']['tipoConsulta'];
+    _ultimaAlteracao = mapResponse['ultimaAlteracao'];
+    _observacao = mapResponse['observacao'];
+
+    Map<String, dynamic> mapUser = {
+    "id" : _id,
+    "idEspecial" : _idEspecial,
+    "especial" : _especial,
+    "idMedico" : _idMedico,
+    "medico" : _medico,
+    "idUsuario" : _idUsuario,
+    "usuario" : _usuario,
+    "data" : _data,
+    "idHora" : _idHora,
+    "hora" : _hora,
+    "idMotivo" : _idMotivo,
+    "motivo" : _motivo,
+    "ultimaAlteracao" : _ultimaAlteracao,
+    "observacao" : (_observacao == '') ? "Sem observação." : _observacao
+    };
+
+    final agendamentos = Agendamentos.fromJson(mapUser) as Agendamentos;
+
+    Usuario.clear();
+
+    if (response.statusCode == 200) {
+      agendamentos.save();
+    }
+    return agendamentos;
+  }
 }
