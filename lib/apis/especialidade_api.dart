@@ -193,4 +193,54 @@ class EspecialidadeApi {
 
     return response.statusCode;
   }
+
+  static Future<http.Response> saveEspe(int id, String nome, String descricao) async {
+
+    int _id = id;
+    String _nome = nome;
+    String _descricao = descricao;
+
+    var setup = Setups();
+    var _token;
+    var url = '';
+
+      Future<dynamic> _buscarToken() async {
+        var setup = await Prefs.getString('user.prefs');
+        Map<String, dynamic> mapResponse = json.decode(setup);
+        return (mapResponse['token']);
+      }
+      _token = await _buscarToken();
+
+      if(_id==0){
+        url = setup.conexao + '/especialidades';
+      } else{
+        url = setup.conexao + '/especialidades/$_id';
+      }
+
+    var header = {
+      "Content-Type": "application/json",
+      "Accept-Charset": "utf-8",
+      "Authorization": "$_token"
+    };
+
+    Map params;
+    if (id == 0) {
+         params = {
+          "nome": _nome,
+          "descricao": _descricao
+        };
+      } else {
+        params = {
+          "nome": _nome,
+          "descricao": _descricao
+        };
+      }
+
+    var _body = utf8.encode(json.encode(params));
+    var response = await (id == 0
+        ? http.post(Uri.parse(url), headers: header, body: _body)
+        : http.put(Uri.parse(url), headers: header, body: _body));
+
+    return response;
+  }
 }

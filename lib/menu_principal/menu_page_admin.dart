@@ -89,7 +89,7 @@ class _MenuPageAdminState extends State<MenuPageAdmin> {
         child: Icon(Icons.add,),
         backgroundColor: Colors.amber,
         onPressed: () async {
-          ///PROGRAMAR CADASTRO NAVIGATOR
+          Navigator.of(context).pushNamed('/cadEspeAdminPage');
         },
       ),
     );

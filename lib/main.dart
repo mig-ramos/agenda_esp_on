@@ -3,6 +3,7 @@ import 'package:agenda_esp_on/usuario/editat_senha_usu_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'admin/cad_espe_admin_page.dart';
 import 'admin/cad_medi_admin_page.dart';
 import 'admin/cad_usu_admin_page.dart';
 import 'admin/lista_usuario_page.dart';
@@ -50,6 +51,8 @@ class AgendaEspOn extends StatelessWidget {
         '/listaUsuPage': (context) => ListaUsuPage(title: 'Lista de Usuários'),
         '/cadUsuAdminPage': (context) =>
             CadUsuAdminPage(title: 'Cadastro de Paciente'),
+        '/cadEspeAdminPage': (context) =>
+            CadEspeAdminPage(title: 'Cadastro de Especialidade'),
         '/cadMediAdminPage': (context) =>
             CadMediAdminPage(title: 'Cadastro de Médico'),
         '/editaUsuarioPage': (context) =>
