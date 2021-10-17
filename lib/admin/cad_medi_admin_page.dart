@@ -312,7 +312,6 @@ class _CadMediAdminPageState extends State<CadMediAdminPage> {
   }
 
   _onClickCancelar(context) async {
-    // Navigator.of(context).pushReplacementNamed('/');
     Navigator.pop(context);
   }
 

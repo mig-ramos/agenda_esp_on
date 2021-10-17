@@ -11,6 +11,7 @@ import 'home/home_page.dart';
 import 'login/cad_user_page.dart';
 import 'login/login_page.dart';
 import 'medico/edita_agenda_usu_page.dart';
+import 'medico/editar_medico_page.dart';
 import 'menu_principal/menu_page_admin.dart';
 import 'menu_principal/menu_page_medico.dart';
 import 'menu_principal/menu_page_usuario.dart';
@@ -53,6 +54,8 @@ class AgendaEspOn extends StatelessWidget {
             CadMediAdminPage(title: 'Cadastro de Médico'),
         '/editaUsuarioPage': (context) =>
             EditarUsuarioPage(title: 'Edita Perfil Usuário'),
+        '/editaMedicoPage': (context) =>
+            EditarMedicoPage(title: 'Dados Cadastrais Médico'),
         '/editaAgendaUsuPage': (context) => EditaAgendaUsuPage(
               title: 'Editar Ficha Paciente'),
         '/cadAgendaPage': (context) => CadAgendaPage(title: 'Agendar Consulta'),

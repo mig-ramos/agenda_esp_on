@@ -238,7 +238,6 @@ class _CadUsuAdminPageState extends State<CadUsuAdminPage> {
   }
 
   _onClickCancelar(context) {
-    // Navigator.of(context).pushReplacementNamed('/');
     Navigator.pop(context);
   }
 
@@ -249,8 +248,6 @@ class _CadUsuAdminPageState extends State<CadUsuAdminPage> {
     String senha = _txtSenha.text;
     DateTime dataNascimento = currentDate;
 
-   // print("Id $id, Nome $nome, Email $email, Senha $senha, Data nascimento: $dataNascimento");
-
     if (!_formKey.currentState!.validate()) {
       return;
     }
@@ -260,7 +257,7 @@ class _CadUsuAdminPageState extends State<CadUsuAdminPage> {
     });
 
     var usuario =
-        await UsuarioApi.saveUsu(id, nome, email, senha, dataNascimento);
+        await UsuarioApi.saveUsu(id, nome, email, senha, dataNascimento, '0');
 
     switch (usuario.statusCode) {
       case 200:

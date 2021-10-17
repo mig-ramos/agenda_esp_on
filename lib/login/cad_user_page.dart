@@ -3,7 +3,6 @@ import 'package:agenda_esp_on/components/alert.dart';
 import 'package:agenda_esp_on/utils/string_capitalize.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/intl.dart';
 
 class CadUserPage extends StatefulWidget {
@@ -238,18 +237,16 @@ class _CadUserPageState extends State<CadUserPage> {
   }
 
   _onClickCancelar(context) {
-    // Navigator.of(context).pushReplacementNamed('/');
     Navigator.pop(context);
   }
 
   _onClickCadastrar(context) async {
-  //  print("Cadastrar!");
     int id = 0;
     String nome = (_txtNome.text).capitalizeFirstofEach;
     String email = _txtEmail.text;
     String senha = _txtSenha.text;
     DateTime dataNascimento = currentDate;
-    // print("Id $id, Nome $nome, Email $email, Senha $senha, Data nascimento: $dataNascimento");
+
     if (!_formKey.currentState!.validate()) {
       return;
     }
@@ -259,7 +256,7 @@ class _CadUserPageState extends State<CadUserPage> {
     });
 
     var usuario =
-        await UsuarioApi.saveUsu(id, nome, email, senha, dataNascimento);
+        await UsuarioApi.saveUsu(id, nome, email, senha, dataNascimento, '0');
 
     switch (usuario.statusCode) {
       case 200:

@@ -8,20 +8,21 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-class EditarUsuarioPage extends StatefulWidget {
-  EditarUsuarioPage({Key? key, required this.title}) : super(key: key);
+class EditarMedicoPage extends StatefulWidget {
+  EditarMedicoPage({Key? key, required this.title}) : super(key: key);
   final String title;
 
   @override
-  _EditarUsuarioPageState createState() => _EditarUsuarioPageState();
+  _EditarMedicoPageState createState() => _EditarMedicoPageState();
 }
 
-class _EditarUsuarioPageState extends State<EditarUsuarioPage> {
+class _EditarMedicoPageState extends State<EditarMedicoPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   TextEditingController _txtNome = TextEditingController();
   TextEditingController _txtEmail = TextEditingController();
   TextEditingController _txtSenha = TextEditingController();
+  TextEditingController _txtCrm = TextEditingController();
 
   int _id = 0;
 
@@ -40,7 +41,7 @@ class _EditarUsuarioPageState extends State<EditarUsuarioPage> {
         lastDate: DateTime(2050));
     if (pickedDate != null && pickedDate != currentDate)
       setState(() {
-        currentDate = pickedDate;
+        currentDate = currentDate;
       });
   }
 
@@ -103,7 +104,7 @@ class _EditarUsuarioPageState extends State<EditarUsuarioPage> {
               fontSize: 22,
             ),
             decoration: InputDecoration(
-              labelText: "Nome",
+              labelText: "Nome:",
               labelStyle: TextStyle(
                 color: Colors.black,
                 // fontWeight: FontWeight.bold,
@@ -124,13 +125,14 @@ class _EditarUsuarioPageState extends State<EditarUsuarioPage> {
               }
               return null;
             },
+            enabled: false,
             keyboardType: TextInputType.emailAddress,
             style: TextStyle(
               color: Colors.blue,
               fontSize: 22,
             ),
             decoration: InputDecoration(
-              labelText: "Email",
+              labelText: "Email:",
               labelStyle: TextStyle(
                 color: Colors.black,
                 fontSize: 22,
@@ -150,7 +152,7 @@ class _EditarUsuarioPageState extends State<EditarUsuarioPage> {
               }
               return null;
             },
-            obscureText: false,
+            obscureText: true,
             enabled: false,
             keyboardType: TextInputType.visiblePassword,
             style: TextStyle(
@@ -158,7 +160,7 @@ class _EditarUsuarioPageState extends State<EditarUsuarioPage> {
               fontSize: 22,
             ),
             decoration: InputDecoration(
-              labelText: "Senha",
+              labelText: "Senha:",
               labelStyle: TextStyle(
                 color: Colors.black,
                 fontSize: 22,
@@ -170,12 +172,40 @@ class _EditarUsuarioPageState extends State<EditarUsuarioPage> {
               ),
             ),
           ),
+          TextFormField(
+            controller: _txtCrm,
+            validator: (value) {
+              if (value!.isEmpty) {
+                return 'Informe seu CRM';
+              }
+              return null;
+            },
+            enabled: false,
+            keyboardType: TextInputType.text,
+            style: TextStyle(
+              color: Colors.blue,
+              fontSize: 22,
+            ),
+            decoration: InputDecoration(
+              labelText: "CRM:",
+              labelStyle: TextStyle(
+                color: Colors.black,
+                // fontWeight: FontWeight.bold,
+                fontSize: 22,
+              ),
+              hintText: "Digite o seu CRM",
+              hintStyle: TextStyle(
+                color: Colors.black,
+                fontSize: 18,
+              ),
+            ),
+          ),
           Row(
             children: [
               SizedBox(
                 width: 200,
                 child: Text(
-                  'Data nascimento: ',
+                  'Data inscrição: ',
                   style: styleCampo,
                 ),
               ),
@@ -238,7 +268,8 @@ class _EditarUsuarioPageState extends State<EditarUsuarioPage> {
     String nome = (_txtNome.text).capitalizeFirstofEach;
     String email = _txtEmail.text;
     String senha = _txtSenha.text;
-    DateTime dataNascimento = currentDate;
+    String crm = _txtCrm.text;
+    DateTime dataInscricao = currentDate;
 
     if (!_formKey.currentState!.validate()) {
       return;
@@ -249,16 +280,16 @@ class _EditarUsuarioPageState extends State<EditarUsuarioPage> {
     });
 
     var usuario =
-        await UsuarioApi.saveUsu(id, nome, email, senha, dataNascimento, '0');
+        await UsuarioApi.saveUsu(id, nome, email, senha, dataInscricao, crm);
 
     switch (usuario.statusCode) {
       case 204:
         Navigator.pop(context);
-        alert(context, 'Usuário Alterado \ncom sucesso!!');
+        alert(context, 'Dados alterados \ncom sucesso!!');
         break;
       case 201:
         Navigator.pop(context);
-        alert(context, 'Usuário Cadastrado \ncom sucesso!!');
+        alert(context, 'Médico cadastrado \ncom sucesso!!');
         break;
       case 500:
         alert(context, 'Email: $email \njá Cadastrado..');
@@ -276,8 +307,10 @@ class _EditarUsuarioPageState extends State<EditarUsuarioPage> {
     _txtNome.text = mapResponse["nome"];
     _txtEmail.text = mapResponse["email"];
     _txtSenha.text = mapResponse["senha"];
+    int crm = mapResponse['crm'];
+    _txtCrm.text = crm.toString();
     setState(() {
-      currentDate = stringToDate(mapResponse["data_nascimento"]);
+      currentDate = stringToDate(mapResponse["data_inscricao"]);
       _id = mapResponse["id"];
     });
   }

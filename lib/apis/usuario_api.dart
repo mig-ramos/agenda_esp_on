@@ -1,6 +1,7 @@
 import 'package:agenda_esp_on/configurations/setup.dart';
 import 'package:agenda_esp_on/models/usuario.dart';
 import 'package:agenda_esp_on/models/usuario_lista.dart';
+import 'package:agenda_esp_on/utils/function_utils.dart';
 import 'package:agenda_esp_on/utils/prefs.dart';
 import 'package:dbcrypt/dbcrypt.dart';
 import 'package:http/http.dart' as http;
@@ -94,7 +95,7 @@ class UsuarioApi {
       if (response.statusCode == 200) {
         usuario.save();
       }
- //     Usuario.clear();
+      //     Usuario.clear();
 
       return usuario;
     } else if (_perfis.contains("ADMIN")) {
@@ -115,18 +116,17 @@ class UsuarioApi {
       if (response.statusCode == 200) {
         usuario.save();
       }
-   //   Usuario.clear();
+      //   Usuario.clear();
 
       return usuario;
     }
     return null;
   }
-
   ///
   /// Cadastra Usuário
   ///
   static Future<http.Response> saveUsu(int id, String nome, String email,
-      String senha, DateTime dataNascimento) async {
+      String senha, DateTime data, String crm) async {
     DBCrypt dBCrypt = DBCrypt();
     String senha_h = dBCrypt.hashpw(senha, dBCrypt.gensalt());
     String salt = dBCrypt.gensaltWithRounds(10);
@@ -139,8 +139,15 @@ class UsuarioApi {
     String _codigo = '';
     String _instante = '';
     bool _ativo = true;
-    List<dynamic> _perfis = ['PACIENTE'];
-    String _data_nascimento = dateTostring(dataNascimento);
+    List<dynamic> _perfis = [];
+    String _data = dateTostring(data);
+    var _crm = crm;
+    if (_crm == '0') {
+      _perfis = ['PACIENTE'];
+     } else {
+      _perfis = ['MEDICO'];
+    }
+    int _espeId = 0;
 
     var setup = Setups();
     var _token;
@@ -154,10 +161,12 @@ class UsuarioApi {
         Map<String, dynamic> mapResponse = json.decode(setup);
         return (mapResponse['token']);
       }
-
       _token = await _buscarToken();
-
-      url = setup.conexao + '/pacientes/$_id';
+      if(crm == '0'){
+        url = setup.conexao + '/pacientes/$_id';
+      } else {
+        url = setup.conexao + '/medicos/$_id';
+      }
     }
 
     var header = {
@@ -173,24 +182,50 @@ class UsuarioApi {
 
     Map params;
     if (id == 0) {
-      params = {
-        "nome": _nome,
-        "email": _email,
-        "senha": _senha,
-        "codigo": _codigo,
-        "instante": _instante,
-        "ativo": _ativo,
-        "perfis": _perfis,
-        "data_nascimento": _data_nascimento
-      };
+      if(crm == '0'){
+        params = {
+          "nome": _nome,
+          "email": _email,
+          "senha": _senha,
+          "codigo": _codigo,
+          "instante": _instante,
+          "ativo": _ativo,
+          "perfis": _perfis,
+          "data_nascimento": _data
+        };
+      } else {
+        params = {
+          "nome": _nome,
+          "email": _email,
+          "senha": _senha,
+          "codigo": _codigo,
+          "instante": _instante,
+          "ativo": _ativo,
+          "perfis": _perfis,
+          "crm": _crm,
+          "data_inscricao": _data,
+          "especialidade_id": _espeId
+        };
+      }
     } else {
-      params = {
-        //  "id": _id,
-        "nome": _nome,
-        "email": _email,
-        "senha": _senha_c,
-        "data_nascimento": _data_nascimento
-      };
+      if(crm == '0') {
+        params = {
+          //  "id": _id,
+          "nome": _nome,
+          "email": _email,
+          "senha": _senha_c,
+          "data_nascimento": _data
+        };
+      } else {
+        params = {
+          //  "id": _id,
+          "nome": _nome,
+          "email": _email,
+          "senha": _senha_c,
+          "crm": _crm,
+          "data_inscricao": _data
+        };
+      }
     }
     //   print("Parametros: $params");
     var _body = utf8.encode(json.encode(params));
@@ -249,7 +284,7 @@ class UsuarioApi {
       "senha": _senha_c,
       "data_nascimento": _data_nascimento
     };
-    
+
     var _body = utf8.encode(json.encode(params));
 
     var response =
@@ -274,7 +309,8 @@ class UsuarioApi {
     return _stringdate;
   }
 
-  static Future<http.Response> mudaSenhaMedi(int id, String senha, String nome, String email) async {
+  static Future<http.Response> mudaSenhaMedi(
+      int id, String senha, String nome, String email) async {
     DBCrypt dBCrypt = DBCrypt();
     String senha_h = dBCrypt.hashpw(senha, dBCrypt.gensalt());
     String salt = dBCrypt.gensaltWithRounds(10);
@@ -319,15 +355,15 @@ class UsuarioApi {
 
     switch (response.statusCode) {
       case 204:
-      // Se foi alterado com sussesso - atualiza a tela de edição.
+        // Se foi alterado com sussesso - atualiza a tela de edição.
         await UsuarioApi.bucarUsuPorEmail(_email, _senha, _token);
         break;
     }
     return response;
   }
 
-  static Future<http.Response> mudaSenhaAdm(int id, String senha, String nome, String email) async {
-
+  static Future<http.Response> mudaSenhaAdm(
+      int id, String senha, String nome, String email) async {
     DBCrypt dBCrypt = DBCrypt();
     String senha_h = dBCrypt.hashpw(senha, dBCrypt.gensalt());
     String salt = dBCrypt.gensaltWithRounds(10);
@@ -364,7 +400,7 @@ class UsuarioApi {
       "email": _email,
       "senha": _senha_c,
     };
-    
+
     var _body = utf8.encode(json.encode(params));
 
     var response =
@@ -372,7 +408,7 @@ class UsuarioApi {
 
     switch (response.statusCode) {
       case 204:
-      // Se foi alterado com sussesso - atualiza a tela de edição.
+        // Se foi alterado com sussesso - atualiza a tela de edição.
         await UsuarioApi.bucarUsuPorEmail(_email, _senha, _token);
         break;
     }
@@ -388,7 +424,8 @@ class UsuarioApi {
 
     var _token = await _buscarToken();
     var setup = Setups();
-    var url = Uri.parse(setup.conexao + '/usuarios/page?linesPerPage=20&page=0&orderBy=id&direction=DESC');
+    var url = Uri.parse(setup.conexao +
+        '/usuarios/page?linesPerPage=20&page=0&orderBy=id&direction=DESC');
 
     var header = {
       "Content-Type": "application/json",
@@ -409,8 +446,7 @@ class UsuarioApi {
               id: item['id'],
               nome: item['nome'],
               email: item['email'],
-              senha: item['senha'])
-             );
+              senha: item['senha']));
         }
         break;
       case 403:
@@ -432,7 +468,8 @@ class UsuarioApi {
 
     var _token = await _buscarToken();
     var setup = Setups();
-    var url = Uri.parse(setup.conexao + '/medicos/page?linesPerPage=20&page=0&orderBy=nome&direction=ASC');
+    var url = Uri.parse(setup.conexao +
+        '/medicos/page?linesPerPage=20&page=0&orderBy=nome&direction=ASC');
 
     var header = {
       "Content-Type": "application/json",
@@ -453,8 +490,7 @@ class UsuarioApi {
               id: item['id'],
               nome: item['nome'],
               email: item['email'],
-              senha: item['senha'])
-          );
+              senha: item['senha']));
         }
         break;
       case 403:
@@ -476,7 +512,8 @@ class UsuarioApi {
 
     var _token = await _buscarToken();
     var setup = Setups();
-    var url = Uri.parse(setup.conexao + '/pacientes/page?linesPerPage=20&page=0&orderBy=nome&direction=ASC');
+    var url = Uri.parse(setup.conexao +
+        '/pacientes/page?linesPerPage=20&page=0&orderBy=nome&direction=ASC');
 
     var header = {
       "Content-Type": "application/json",
@@ -497,8 +534,7 @@ class UsuarioApi {
               id: item['id'],
               nome: item['nome'],
               email: item['email'],
-              senha: item['senha'])
-          );
+              senha: item['senha']));
         }
         break;
       case 403:
@@ -511,7 +547,6 @@ class UsuarioApi {
     return listaUsu;
   }
 
-
   static Future<int> delUsuario(id) async {
     final _id = id;
 
@@ -520,10 +555,11 @@ class UsuarioApi {
       Map<String, dynamic> mapResponse = json.decode(setup);
       return (mapResponse['token']);
     }
+
     var _token = await _buscarToken();
     var setup = Setups();
 
-    var url = Uri.parse(setup.conexao +"/usuarios/+$_id");
+    var url = Uri.parse(setup.conexao + "/usuarios/+$_id");
 
     var header = {
       "Content-Type": "application/json",
@@ -533,7 +569,7 @@ class UsuarioApi {
 
     var perfil = await Usuario.get();
 
-    if (perfil!.perfis.contains('ADMIN') && _id == 1){
+    if (perfil!.perfis.contains('ADMIN') && _id == 1) {
       return 403;
     } else {
       var response = await http.delete(url, headers: header);
