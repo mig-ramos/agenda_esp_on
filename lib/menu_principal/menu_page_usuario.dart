@@ -2,8 +2,10 @@ import 'package:agenda_esp_on/apis/agenda_api.dart';
 import 'package:agenda_esp_on/components/alert.dart';
 import 'package:agenda_esp_on/components/navigation_drawer_usuario.dart';
 import 'package:agenda_esp_on/models/agendamentos.dart';
+import 'package:agenda_esp_on/utils/prefs.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'dart:convert';
 
 class MenuPageUsuario extends StatefulWidget {
   const MenuPageUsuario({Key? key, required this.title}) : super(key: key);
@@ -16,10 +18,12 @@ class MenuPageUsuario extends StatefulWidget {
 class _MenuPageUsuarioState extends State<MenuPageUsuario> {
 
   late Future<List<Agendamentos>> _agendamento;
+  var token;
 
   @override
   initState() {
     super.initState();
+    token = _buscarToken();
    _agendamento = AgendaApi.getAgendaPaciente();
   }
 
@@ -87,7 +91,6 @@ class _MenuPageUsuarioState extends State<MenuPageUsuario> {
           child: Icon(Icons.add),
           backgroundColor: Colors.amber,
           onPressed: () async {
-            ///PROGRAMAR CADASTRO NAVIGATOR
            Navigator.of(context).pushNamed('/cadAgendaPage');
           },
         ),
@@ -99,7 +102,7 @@ class _MenuPageUsuarioState extends State<MenuPageUsuario> {
     showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          title: Text("Deletar Agendamento?"),
+          title: Text("Excuir Agendamento?"),
           content: Text('De: ' +
               _stringToString(comp.data) +
               ' às ' +
@@ -113,7 +116,7 @@ class _MenuPageUsuarioState extends State<MenuPageUsuario> {
                 onPressed: () {
                   Navigator.pop(context);
                 },
-                child: Text('Cancelar')),
+                child: Text('Desistir')),
             TextButton(
                 onPressed: () {
                 //  print(comp.especial);
@@ -123,7 +126,7 @@ class _MenuPageUsuarioState extends State<MenuPageUsuario> {
                   });
                 },
                 child: Text(
-                  'Deletar',
+                  'Excluir',
                   style: TextStyle(color: Colors.red),
                 ))
           ],
@@ -184,4 +187,9 @@ class _MenuPageUsuarioState extends State<MenuPageUsuario> {
       });
     }
   }
+}
+Future<String> _buscarToken() async {
+  var setup = await Prefs.getString('user.prefs');
+  Map<String, dynamic> mapResponse = json.decode(setup);
+  return (mapResponse['token']);
 }

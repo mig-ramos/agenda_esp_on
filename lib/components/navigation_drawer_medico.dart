@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import 'custom_dialog_box.dart';
+
 class NavigationDrawerMedico extends StatelessWidget {
   final padding = EdgeInsets.symmetric(horizontal: 20);
 
@@ -132,8 +134,8 @@ class NavigationDrawerMedico extends StatelessWidget {
 
     switch (index) {
       case 0:
-      //    Navigator.of(context).pushNamed('/editaMedicoPage');
-      //  Navigator.of(context).pushNamed('/editaAgendaUsuPage');
+        //    Navigator.of(context).pushNamed('/editaMedicoPage');
+        //  Navigator.of(context).pushNamed('/editaAgendaUsuPage');
         break;
       case 1:
         Navigator.of(context).pushNamed('/editaMedicoPage');
@@ -142,9 +144,15 @@ class NavigationDrawerMedico extends StatelessWidget {
         Navigator.of(context).pushNamed('/editarSenhaUsuarioPage');
         break;
       case 3:
-      //  Navigator.of(context).pushNamed('/idAgenda');
-      //     Navigator.of(context).push(MaterialPageRoute(builder: (contex) {
-      //   return IdAgenda(title: 'AgendaEspOn', agenda: AgendaApi().getAgendaId());}),
+        showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return CustomDialogBox(
+                  title: "Agendamento de Pacientes",
+                  descriptions:
+                      "O histórico do Paciente pode\nser montado no campo Observação:\nsituação/andamento/conclusão\netc..",
+                  text: "Ok");
+            });
         break;
       case 4:
         Navigator.pop(context);

@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import 'custom_dialog_box.dart';
+
 class NavigationDrawerAdmin extends StatelessWidget {
   final padding = EdgeInsets.symmetric(horizontal: 20);
 
@@ -159,9 +161,15 @@ class NavigationDrawerAdmin extends StatelessWidget {
         Navigator.of(context).pushNamed('/editarSenhaUsuarioPage');
         break;
       case 5:
-        //  Navigator.of(context).pushNamed('/idAgenda');
-        //     Navigator.of(context).push(MaterialPageRoute(builder: (contex) {
-        //   return IdAgenda(title: 'AgendaEspOn', agenda: AgendaApi().getAgendaId());}),
+        showDialog(context: context,
+            builder: (BuildContext context){
+              return CustomDialogBox(
+                  title: "Administração",
+                  descriptions: "Para acrescentar uma especialidade, \nbasta clicar no botão (+).\n\nPara excluir especialidade\ndesde que não seja utilizada,\nbasta manter clicado\no Cartão da especialidade..",
+                  text: "Ok"
+              );
+            }
+        );
         break;
       case 6:
         Navigator.pop(context);

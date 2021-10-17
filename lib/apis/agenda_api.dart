@@ -7,14 +7,15 @@ import 'package:agenda_esp_on/models/agendamentos.dart';
 import 'hora_api.dart';
 
 class AgendaApi {
+
   static Future<List<Agendamentos>> getAgendaPaciente() async {
+
     Future<String> _buscarToken() async {
       var setup = await Prefs.getString('user.prefs');
       Map<String, dynamic> mapResponse = json.decode(setup);
       return (mapResponse['token']);
     }
-
-    var _token = await _buscarToken();
+   var _token = await _buscarToken();
 
     var setup = Setups();
 
@@ -296,7 +297,6 @@ class AgendaApi {
     var url = Uri.parse(setup.conexao +
         '/agendamentos/medico?linesPerPage=24&page=0&direction=DESC');
 
-
     var header = {
       "Content-Type": "application/json",
       "Accept-Charset": "utf-8",
@@ -306,7 +306,6 @@ class AgendaApi {
     final response = await http.get(url, headers: header);
 
    List<Agendamentos> agendamentos = [];
-    //  print(response.statusCode);
     switch (response.statusCode) {
       case 200:
         int t = 0;
@@ -330,17 +329,14 @@ class AgendaApi {
               item['observacao']
           ));
         }
-        print(agendamentos);
         return agendamentos;
         break;
       case 201:
-        print(agendamentos);
         return agendamentos;
         break;
       default:
         throw Exception('Conexão falhou :(');
     }
-    //   return agendamentos;
   }
 
   static editarAgenda(id) {}
@@ -379,9 +375,7 @@ class AgendaApi {
     };
 
     var response = await http.get(url, headers: header);
-  //    print(' PRINT 2 ====  Response status API usuário: ${response.statusCode}');
     String body = utf8.decode(response.bodyBytes);
-//     print(body);
     final mapResponse = jsonDecode(body);
 
     _id = mapResponse['id'];

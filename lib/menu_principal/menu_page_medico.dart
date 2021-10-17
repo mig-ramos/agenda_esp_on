@@ -46,7 +46,6 @@ class _MenuPageMedicoState extends State<MenuPageMedico> {
         future: _agendamento,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            //  print(snapshot.data);
             return ListView(
               children: _listCompromissos(snapshot.data),
             );
@@ -86,17 +85,10 @@ class _MenuPageMedicoState extends State<MenuPageMedico> {
         },
       ),
       // drawer: DrawerList(),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        onPressed: () {
-          ///PROGRAMAR CADASTRO NAVIGATOR
-        },
-      ),
     );
   }
 
   List<Widget> _listCompromissos(data) {
-   // print(_listCompromissos(data));
     List<Widget> compromissos = [];
     for (var comp in data) {
       compromissos.add(Card(
@@ -166,37 +158,20 @@ class _MenuPageMedicoState extends State<MenuPageMedico> {
                     child: Text('Cancelar')),
                 TextButton(
                     onPressed: () async {
-                      //  print(comp.especial);
-                      // this.setState(() {
                       int _idx = comp.id;
-                    //  this._editarAgenda(comp.id);
                       var response = await AgendaApi.findAgenda(_idx);
-                      print('RESPONDENDO AQUI $response');
                       if (response != null) {
                         Navigator.pop(context);
                         Navigator.of(context).pushNamed('/editaAgendaUsuPage');
-                        // });
                       }
                     },
                     child: const Text(
                       'Editar',
                       style: TextStyle(color: Colors.red),
-                    ))
+                    )
+                )
               ],
-            ));
-  }
-
-  _editarAgenda(id) async {
-     var response = await AgendaApi.findAgenda(id);
-  //    if (response == 200) {
-  //   //   setState(() {
-  //   //     alert(context, 'Ok. Solicitação atendida \nEditado o agendamento.');
-  //   //     _agendamento = AgendaApi.getAgendaMedico();
-  //   //   });
-  //   // }
-  //
-  //   // Navigator.of(context).pushReplacementNamed('/editaAgendaUsuPage');
-  //   // Navigator.of(context).pushNamed('/editaAgendaUsuPage');
-  // }
+            )
+    );
   }
 }
