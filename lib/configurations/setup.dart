@@ -4,8 +4,9 @@ import 'dart:convert' as convert;
 /// Configuração da url API
 ///
 class Setups {
-  var _conexao = 'http://192.168.15.15:8080';
-  // var url = Uri.parse('https://agenda-online-tcc.herokuapp.com');
+ var _conexao = 'http://192.168.15.15:8080';
+ //  var _conexao = 'https://agenda-online-tcc.herokuapp.com';
+
   var _cabecalho = {
     "Content-Type": "application/json",
     "Accept-Charset": "utf-8"

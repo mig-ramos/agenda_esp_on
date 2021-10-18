@@ -16,8 +16,6 @@ class LoginPage extends StatefulWidget {
   _LoginPageState createState() => _LoginPageState();
 }
 
-var token;
-
 Future<String> _buscarToken() async {
   var setup = await Prefs.getString('user.prefs');
   Map<String, dynamic> mapResponse = json.decode(setup);
@@ -149,7 +147,7 @@ class _LoginPageState extends State<LoginPage> {
         if (_formKey.currentState!.validate()) {
           var resposta = await LoginApi.login(email, senha);
           if (resposta == 200) {
-            token = await _buscarToken();
+            var token = await _buscarToken();
             var usuario =
                 await UsuarioApi.bucarUsuPorEmail(email, senha, token);
             if (usuario != null) {
