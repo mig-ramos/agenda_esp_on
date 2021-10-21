@@ -170,14 +170,18 @@ class AgendaApi {
     return dropHoras;
   }
 
-  static Future<int> salvaAgenda(int id, String dataDisponivel, int idEspe,
-      int idTipo, int idMedi, int idHora, String observacao) async {
+  static Future<int> salvaAgenda(int id, String dataDisponivel, int idEspe, String nomeEspe,
+      int idTipo, String tipoConsulta, int idMedi, String nomeMedi, int idHora, String nomeHr, String observacao) async {
     int _id = id;
     int _idEspe = idEspe;
+    String _nomeEspe = nomeEspe;
     int _idMedi = idMedi;
+    String _nomeMedi = nomeMedi;
     String _data = dataDisponivel;
     int _idHr = idHora;
+    String _nomeHr = nomeHr;
     int _idCons = idTipo;
+    String _nomeTipo = tipoConsulta;
 
     var usu = await Usuario.get();
     int _idUsu = usu!.id;
@@ -215,11 +219,11 @@ class AgendaApi {
     Map params;
     if (_id == 0) {
       params = {
-        "especialidade": {'id': _idEspe},
-        "medico": {'id': _idMedi},
+        "especialidade": {'id': _idEspe, 'nome': _nomeEspe},
+        "medico": {'id': _idMedi, 'nome': _nomeMedi},
         "dataDisponivel": _data,
-        "hora": {'id': _idHr},
-        "tipoConsulta": {'id': _idCons},
+        "hora": {'id': _idHr, 'hora': _nomeHr},
+        "tipoConsulta": {'id': _idCons, 'tipoConsulta': _nomeTipo},
         "usuario": _usu,
         "observacao": _obs,
       };
@@ -412,7 +416,7 @@ class AgendaApi {
 
     final agendamentos = Agendamentos.fromJson(mapUser) as Agendamentos;
 
-    Usuario.clear();
+    Agendamentos.clear();
 
     if (response.statusCode == 200) {
       agendamentos.save();

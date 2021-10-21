@@ -1,7 +1,6 @@
 import 'package:agenda_esp_on/configurations/setup.dart';
 import 'package:agenda_esp_on/models/usuario.dart';
 import 'package:agenda_esp_on/models/usuario_lista.dart';
-import 'package:agenda_esp_on/utils/function_utils.dart';
 import 'package:agenda_esp_on/utils/prefs.dart';
 import 'package:dbcrypt/dbcrypt.dart';
 import 'package:http/http.dart' as http;
@@ -22,7 +21,7 @@ class UsuarioApi {
     bool _ativo = false;
     List<dynamic> _perfis = [];
     String _data_nascimento = '';
-    int _crm = 0;
+    int _crm;
     String _data_inscricao = '';
 
     var setup = Setups();
@@ -73,7 +72,7 @@ class UsuarioApi {
 
       return usuario;
     } else if (_perfis.contains("MEDICO")) {
-      _crm = mapResponse["crm"] as int;
+      _crm = mapResponse["crm"];
       _data_inscricao = mapResponse["data_inscricao"] as String;
 
       Map<String, dynamic> mapUser = {
@@ -95,7 +94,6 @@ class UsuarioApi {
       if (response.statusCode == 200) {
         usuario.save();
       }
-      //     Usuario.clear();
 
       return usuario;
     } else if (_perfis.contains("ADMIN")) {
@@ -116,7 +114,6 @@ class UsuarioApi {
       if (response.statusCode == 200) {
         usuario.save();
       }
-      //   Usuario.clear();
 
       return usuario;
     }
@@ -210,7 +207,6 @@ class UsuarioApi {
     } else {
       if(crm == '0') {
         params = {
-          //  "id": _id,
           "nome": _nome,
           "email": _email,
           "senha": _senha_c,
@@ -218,7 +214,6 @@ class UsuarioApi {
         };
       } else {
         params = {
-          //  "id": _id,
           "nome": _nome,
           "email": _email,
           "senha": _senha_c,
@@ -450,7 +445,7 @@ class UsuarioApi {
         }
         break;
       case 403:
-        print('Conexão encerrada.. Entre novamente');
+    //    print('Conexão encerrada.. Entre novamente');
         break;
       default:
         throw Exception('Falha na conexão');
@@ -494,7 +489,7 @@ class UsuarioApi {
         }
         break;
       case 403:
-        print('Conexão encerrada.. Entre novamente');
+  //      print('Conexão encerrada.. Entre novamente');
         break;
       default:
         throw Exception('Falha na conexão');
@@ -538,7 +533,7 @@ class UsuarioApi {
         }
         break;
       case 403:
-        print('Conexão encerrada.. Entre novamente');
+   //     print('Conexão encerrada.. Entre novamente');
         break;
       default:
         throw Exception('Falha na conexão');
@@ -573,7 +568,7 @@ class UsuarioApi {
       return 403;
     } else {
       var response = await http.delete(url, headers: header);
-      print(response.statusCode);
+  //    print(response.statusCode);
       return response.statusCode;
     }
   }

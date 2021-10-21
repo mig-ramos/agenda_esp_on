@@ -38,7 +38,7 @@ class Usuario {
     ativo = json['ativo'];
     perfis = json['perfis'];
     dataNascimento = (json['data_nascimento'] ?? '');
-    crm = (json['crm'] ?? 0);
+    crm = (json['crm']?? 0);
     dataInscricao = (json['data_inscricao'] ?? '');
   }
 

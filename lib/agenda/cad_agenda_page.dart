@@ -375,15 +375,19 @@ class _CadAgendaPageState extends State<CadAgendaPage> {
     /// =====================================================
     var listEsp = await Especial.get(); // Id da ESPECIALIDADE
     int _idEspe = listEsp!.id;
+    String _nomeEspe = listEsp.nome;
 
     var medic = await Medic.get(); // Id do MEDICO
     int _idMedi = medic!.id;
+    String _nomeMedi = medic.nome;
 
     var hr = await Hra.get(); // Id do MEDICO
     int _idHora = hr!.id;
+    String _nomeHr = hr.hora;
 
     var mot = await Motivo.get(); // Id do MOTIVO
     int _idMotivo = mot!.id;
+    String _nomeMot = mot.tipoConsulta;
 
     /// =====================================================
     /// Validação dos campos
@@ -400,9 +404,13 @@ class _CadAgendaPageState extends State<CadAgendaPage> {
       var response = await AgendaApi.salvaAgenda(0,
           DateFormat("yyyy-MM-dd").format(dataAgenda),
           _idEspe,
+          _nomeEspe,
           _idMotivo,
+          _nomeMot,
           _idMedi,
+          _nomeMedi,
           _idHora,
+          _nomeHr,
           'Sem Observação');
       switch (response) {
         case 204:

@@ -304,11 +304,13 @@ class _EditarMedicoPageState extends State<EditarMedicoPage> {
 
   _recuperaDados() async {
     Map mapResponse = json.decode(await Prefs.getString('usuario.prefs'));
+    print(mapResponse);
     _txtNome.text = mapResponse["nome"];
     _txtEmail.text = mapResponse["email"];
     _txtSenha.text = mapResponse["senha"];
-    int crm = mapResponse['crm'];
-    _txtCrm.text = crm.toString();
+    //  int crm = mapResponse['crm'];
+    // // _txtCrm.text = crm.toString();
+    _txtCrm.text = mapResponse['crm'].toString();
     setState(() {
       currentDate = stringToDate(mapResponse["data_inscricao"]);
       _id = mapResponse["id"];

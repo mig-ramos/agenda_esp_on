@@ -24,7 +24,7 @@ class _EditaAgendaUsuPageState extends State<EditaAgendaUsuPage> {
   TextEditingController _txtUltimaAlteracao = TextEditingController();
   TextEditingController _txtObservacao = TextEditingController();
 
-  String _dropEspecialidadeValue = 'Buscar..';
+ // String _dropEspecialidadeValue = 'Buscar..';
 
   var _progress = false;
 
@@ -366,7 +366,7 @@ class _EditaAgendaUsuPageState extends State<EditaAgendaUsuPage> {
   _recuperaFicha() async {
     Map<String, dynamic> mapResponse =
         json.decode(await Prefs.getString('agendamento.prefs'));
-    print('Aqui estamos: $mapResponse');
+//    print('Aqui estamos: $mapResponse');
     _id = (mapResponse["id"]);
     _txtDataConsulta.text = stringToFormat(mapResponse["data"]);
     _txtHora.text = mapResponse["hora"];

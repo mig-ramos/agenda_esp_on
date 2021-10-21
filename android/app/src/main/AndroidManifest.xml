@@ -1,7 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="br.com.siderbit.agenda_esp_on">
+    <uses-permission android:name="android-permission.INTERNET"/>
    <application
-        android:label="agenda_esp_on"
+        android:label="Agenda Esp On"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

@@ -124,6 +124,7 @@ class _EditarUsuarioPageState extends State<EditarUsuarioPage> {
               }
               return null;
             },
+            enabled: false,
             keyboardType: TextInputType.emailAddress,
             style: TextStyle(
               color: Colors.blue,

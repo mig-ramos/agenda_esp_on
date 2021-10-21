@@ -26,12 +26,14 @@ class HomePage extends StatelessWidget {
             Container(
               child: Column(
                 children: [
-                  Text("Bem-vindo!",
+                  Text("Bem-vindo(a)!",
                       style: TextStyle(fontSize: 30, color: Colors.pink)),
+                  Text("Agenda de Especialistas Online.",
+                      style: TextStyle(fontSize: 18, color: Colors.pink)),
                   Container(
                     height: 70,
                     width: double.infinity,
-                    margin: EdgeInsets.symmetric(vertical: 20),
+                    margin: EdgeInsets.symmetric(vertical: 40),
                     padding: EdgeInsets.all(8),
                     child: ElevatedButton(
                       onPressed: () =>
@@ -48,7 +50,9 @@ class HomePage extends StatelessWidget {
                     child: TextButton(
                       onPressed: () => Navigator.of(context).pushNamed('/cadUserPage'),
                       style: textButtonStyle,
-                      child: (Text("Não tenho Cadastro")),
+                      child: (Text("Não tenho Cadastro", style: TextStyle(fontSize: 26, color: Colors.pink,
+                        decoration: TextDecoration.underline
+                      ),)),
                     ),
                   )
                 ],
