@@ -191,6 +191,7 @@ class _CadAgendaPageState extends State<CadAgendaPage> {
               // ),
               onChanged: (String? newValue) {
                 setState(() {
+                  click = true;
                   _dropMedicoValue = newValue!;
                 });
               },
