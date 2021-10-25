@@ -1,5 +1,5 @@
 import 'package:agenda_esp_on/usuario/editar_usuario_page.dart';
-import 'package:agenda_esp_on/usuario/editat_senha_usu_page.dart';
+import 'package:agenda_esp_on/usuario/editar_senha_usu_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -16,6 +16,8 @@ import 'medico/editar_medico_page.dart';
 import 'menu_principal/menu_page_admin.dart';
 import 'menu_principal/menu_page_medico.dart';
 import 'menu_principal/menu_page_usuario.dart';
+import 'usuario/editar_usuario_page.dart';
+import 'usuario/editar_senha_usu_page.dart';
 
 void main() {
   runApp(AgendaEspOn());
@@ -63,7 +65,6 @@ class AgendaEspOn extends StatelessWidget {
               title: 'Editar Ficha Paciente'),
         '/cadAgendaPage': (context) => CadAgendaPage(title: 'Agendar Consulta'),
         '/editarSenhaUsuarioPage': (context) => EditarSenhaUsuario(title: 'Editar Senha'),
-        //  '/idAgenda':(context) => IdAgenda(title: 'Editar Senha', agenda: getAgendaId())
       },
     );
   }

@@ -104,7 +104,7 @@ class _CadEspeAdminPageState extends State<CadEspeAdminPage> {
                 controller: _txtDescricao,
                 validator: (value) {
                   if (value!.isEmpty) {
-                    return 'Informe a Descrção';
+                    return 'Informe a Descrição';
                   }
                   return null;
                 },

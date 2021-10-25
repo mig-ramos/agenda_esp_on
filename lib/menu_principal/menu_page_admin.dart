@@ -93,7 +93,6 @@ class _MenuPageAdminState extends State<MenuPageAdmin> {
         },
       ),
     );
-
   }
 
   List<Widget> _listEspecialidades(data) {
@@ -164,6 +163,4 @@ class _MenuPageAdminState extends State<MenuPageAdmin> {
       alert(context, ':-(  Solicitação não atendida \n      Especialidade em uso.');
     }
   }
-
-
 }

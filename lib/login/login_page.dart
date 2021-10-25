@@ -18,7 +18,7 @@ class LoginPage extends StatefulWidget {
 
 Future<String> _buscarToken() async {
   var setup = await Prefs.getString('user.prefs');
-  Map<String, dynamic> mapResponse = json.decode(setup);
+  Map<String, dynamic> mapResponse = jsonDecode(setup);
   return (mapResponse['token']);
 }
 

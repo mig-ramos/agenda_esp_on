@@ -102,7 +102,7 @@ class EspecialidadeApi {
         }
         break;
       case 403:
-        print('Conexão encerrada.. Entre novamente');
+    //    print('Conexão encerrada.. Entre novamente');
         break;
       default:
         throw Exception('Falha na conexão');
@@ -149,10 +149,6 @@ class EspecialidadeApi {
           if (nome == item['nome']) {
             espe.id = item['id'];
             espe.nome = item['nome'];
-            // Especial.clear();
-        //    Prefs.setInt('idMedi', item['id']);
-       //     print('O ID: ${item['id']} O NOME:${item['nome']}');
-        //    await MedicoApi.dropMedicos(item['id']);
             espe.save();
           }
         }

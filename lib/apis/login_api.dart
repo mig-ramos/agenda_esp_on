@@ -26,6 +26,7 @@ class LoginApi {
 
     switch (status) {
       case 200:
+        User.clear();
         Map<String, dynamic> mapResponse = json.decode(response.body);
         _token = (mapResponse["Authorization"] == null)
             ? ''
@@ -38,7 +39,6 @@ class LoginApi {
         };
 
         final usser = User.fromJson(mapUser);
-        User.clear();
         usser.save();
         return response.statusCode;
         break;

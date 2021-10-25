@@ -136,6 +136,7 @@ class MedicoApi {
 
     switch (status) {
       case 200:
+        Medic.clear();
         String body = utf8.decode(response.bodyBytes);
         final jsonData = jsonDecode(body).cast<Map<String, dynamic>>();
 
@@ -143,14 +144,13 @@ class MedicoApi {
           if (nome == item['nome']) {
             medi.id = item['id'];
             medi.nome = item['nome'];
-            Medic.clear();
             medi.save();
           }
         }
 
         break;
       case 403:
-        print('Conexão encerrada.. Entre novamente');
+      //  print('Conexão encerrada.. Entre novamente');
         break;
       default:
         throw Exception('Falha na conexão');

@@ -36,6 +36,13 @@ class _CadAgendaPageState extends State<CadAgendaPage> {
   List<String> _listaHoras = [];
   List<String> _tipoConsulta = [];
 
+  late int _idHora;
+  late String _nomeHr;
+  late int _idMedi;
+  late String _nomeMedi;
+  late int _idMotivo;
+  late String _nomeMot;
+
   bool click = true;
 
   TextStyle styleValor = TextStyle(
@@ -257,10 +264,14 @@ class _CadAgendaPageState extends State<CadAgendaPage> {
               // ),
               onChanged: (String? newValue) {
                 setState(() {
+                  // _dropHoraValue = newValue!;
+                  // _recuperaTipoConsulta();
+                  // _buscaIdMedico(_dropMedicoValue);
+                  // _buscaIdHora(_dropHoraValue);
                   _dropHoraValue = newValue!;
+                  _buscaIdHora(_dropHoraValue);
                   _recuperaTipoConsulta();
                   _buscaIdMedico(_dropMedicoValue);
-                  _buscaIdHora(_dropHoraValue);
                 });
               },
               items: _listaHoras.map<DropdownMenuItem<String>>((String value) {
@@ -371,28 +382,10 @@ class _CadAgendaPageState extends State<CadAgendaPage> {
 
     DateTime dataAgenda = currentDate;
 
-    /// =====================================================
-    /// Captura dos IDs para Agendamentos
-    /// =====================================================
     var listEsp = await Especial.get(); // Id da ESPECIALIDADE
     int _idEspe = listEsp!.id;
     String _nomeEspe = listEsp.nome;
 
-    var medic = await Medic.get(); // Id do MEDICO
-    int _idMedi = medic!.id;
-    String _nomeMedi = medic.nome;
-
-    var hr = await Hra.get(); // Id do MEDICO
-    int _idHora = hr!.id;
-    String _nomeHr = hr.hora;
-
-    var mot = await Motivo.get(); // Id do MOTIVO
-    int _idMotivo = mot!.id;
-    String _nomeMot = mot.tipoConsulta;
-
-    /// =====================================================
-    /// Validação dos campos
-    /// =====================================================
     if (_dropEspecialidadeValue == 'Buscar..') {
       alert(context, 'Qual a Especialidade?');
     } else if (_dropMedicoValue == 'Buscar..') {
@@ -412,7 +405,7 @@ class _CadAgendaPageState extends State<CadAgendaPage> {
           _nomeMedi,
           _idHora,
           _nomeHr,
-          'Sem Observação');
+          '=>');
       switch (response) {
         case 204:
           Navigator.pop(context);
@@ -485,21 +478,33 @@ class _CadAgendaPageState extends State<CadAgendaPage> {
   }
 
   _buscaIdMedico(String dropMedicoValue) async {
-    var medico = MedicoApi.buscaIdMedico(dropMedicoValue);
-    var medic = await Medic.get(); // Id do MEDICO
-    int _idMedi = medic!.id;
+    var medico = await MedicoApi.buscaIdMedico(dropMedicoValue);
+    if(medico!= null){
+      setState(() {
+        _idMedi = medico.id;
+        _nomeMedi = medico.nome;
+      });
+    }
   }
 
   _buscaIdHora(String dropHoraValue) async {
-    var hora = HoraApi.buscaIdHora(dropHoraValue);
-    var hr = await Hra.get(); // Id do HORA
-    int _idHora = hr!.id;
+    var hora = await HoraApi.buscaIdHora(dropHoraValue);
+    if(hora != null){
+      setState(() {
+        _idHora = hora.id;
+        _nomeHr = hora.hora;
+      });
+    }
   }
 
   _buscaIdMotivo(String dropTipoConsultaValue) async {
-    var motivo = MotivoApi.buscaIdMotivo(dropTipoConsultaValue);
-    var mot = await Motivo.get(); // Id do MOTIVO
-    int _idMotivo = mot!.id;
+    var motivo = await MotivoApi.buscaIdMotivo(dropTipoConsultaValue);
+    if (motivo != null){
+      setState(() {
+        _idMotivo = motivo.id;
+        _nomeMot = motivo.tipoConsulta;
+      });
+    }
   }
 
   _recuperaTipoConsulta() async {

@@ -78,15 +78,14 @@ class MotivoApi{
 
     switch (response.statusCode) {
       case 200:
+        Motivo.clear();
         String body = utf8.decode(response.bodyBytes);
-
         var mapResponse = json.decode(body).cast<Map<String, dynamic>>();
 
         for (var item in mapResponse) {
           if (motivo == item['tipoConsulta']) {
             moti.id = item['id'];
             moti.tipoConsulta = item['tipoConsulta'];
-            Motivo.clear();
             moti.save();
           }
         }

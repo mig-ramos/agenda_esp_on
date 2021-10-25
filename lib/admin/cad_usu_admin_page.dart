@@ -3,7 +3,6 @@ import 'package:agenda_esp_on/components/alert.dart';
 import 'package:agenda_esp_on/utils/string_capitalize.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/intl.dart';
 
 class CadUsuAdminPage extends StatefulWidget {

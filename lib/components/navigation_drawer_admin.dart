@@ -1,3 +1,4 @@
+import 'package:agenda_esp_on/utils/prefs.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -172,17 +173,11 @@ class NavigationDrawerAdmin extends StatelessWidget {
         );
         break;
       case 6:
+        Prefs.setString('user.prefs', '');
+        Prefs.setString('usuario.prefs', '');
+        Prefs.setString('perfil', '');
         Navigator.pop(context);
         break;
     }
   }
-
-  // String _mail() {
-  //   var mail = Prefs.getString('email') as String;
-  //   return mail;
-  // }
-  //
-  // initState() {
-  //   _mail();
-  // }
 }

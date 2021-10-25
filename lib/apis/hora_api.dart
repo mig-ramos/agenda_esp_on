@@ -68,8 +68,8 @@ class HoraApi{
 
     switch (response.statusCode) {
       case 200:
+        Hra.clear();
         String body = utf8.decode(response.bodyBytes);
-
         var mapResponse = json.decode(body).cast<Map<String, dynamic>>();
 
         for (var item in mapResponse) {
@@ -77,7 +77,6 @@ class HoraApi{
           if (hora == item['hora']) {
             hra.id = item['id'];
             hra.hora = item['hora'];
-            Hra.clear();
             hra.save();
           }
         }
