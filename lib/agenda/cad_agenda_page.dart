@@ -154,7 +154,7 @@ class _CadAgendaPageState extends State<CadAgendaPage> {
                   _dropMedicoValue = 'Buscar..';
                   EspecialidadeApi.dropEspecialidades(
                       _dropEspecialidadeValue);
-                   _recuperaMedico(_dropEspecialidadeValue); // AQUI ESOLHE OS MEDICOS
+                   _recuperaMedico(_dropEspecialidadeValue); // AQUI ESCOLHE OS MEDICOS
                 });
               },
               items:

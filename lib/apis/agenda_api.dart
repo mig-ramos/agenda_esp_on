@@ -78,7 +78,7 @@ class AgendaApi {
     var setup = Setups();
 
     var url = Uri.parse(setup.conexao +
-        '/agendamentos/page?linesPerPage=4&page=0&direction=DESC');
+        '/agendamentos/page?linesPerPage=24&page=0&direction=DESC');
 
     var header = {
       "Content-Type": "application/json",
