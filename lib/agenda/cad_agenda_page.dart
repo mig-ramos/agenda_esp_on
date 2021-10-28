@@ -421,10 +421,10 @@ class _CadAgendaPageState extends State<CadAgendaPage> {
           alert(context,
               'Assinatura de conexão vencida!\nFaça Login Novamente..');
           break;
-        case 500:
-          Navigator.pop(context);
-          alert(context, 'Falha no Servidor!');
-          break;
+        // case 500:
+        //   Navigator.pop(context);
+        //   alert(context, 'Falha no Servidor!');
+        //   break;
       }
     }
 

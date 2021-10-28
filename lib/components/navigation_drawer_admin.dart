@@ -30,7 +30,7 @@ class NavigationDrawerAdmin extends StatelessWidget {
               padding: padding,
               child: Column(
                 children: [
-                  SizedBox(height: 30),
+                  SizedBox(height: 18),
                   buildMenuItem(
                     text: 'Especialidades',
                     icon: Icons.assignment_ind_outlined,

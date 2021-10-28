@@ -5,6 +5,8 @@ import 'package:http/http.dart' as http;
 
 class LoginApi {
   static Future<int> login(String user, String password) async {
+    User.clear();
+
     String _email = user;
     String _senha = password;
     String _token = '';
@@ -26,7 +28,6 @@ class LoginApi {
 
     switch (status) {
       case 200:
-        User.clear();
         Map<String, dynamic> mapResponse = json.decode(response.body);
         _token = (mapResponse["Authorization"] == null)
             ? ''
